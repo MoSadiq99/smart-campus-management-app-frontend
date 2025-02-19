@@ -17,7 +17,7 @@ export interface NavigationItem {
 export const NavigationItems: NavigationItem[] = [
   {
     id: 'navigation',
-    title: 'Farmer',
+    title: 'Lecturer',
     type: 'group',
     icon: 'icon-navigation',
     children: [
@@ -25,7 +25,7 @@ export const NavigationItems: NavigationItem[] = [
         id: 'dashboard',
         title: 'Dashboard',
         type: 'item',
-        url: '/farmer/dashboard',
+        url: '/Lecturer/dashboard',
         icon: 'feather icon-home',
         classes: 'nav-item'
       }
