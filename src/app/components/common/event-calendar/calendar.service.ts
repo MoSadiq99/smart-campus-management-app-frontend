@@ -1,12 +1,16 @@
-import {Injectable} from "@angular/core";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import {DayPilot} from "@daypilot/daypilot-lite-angular";
 import {HttpClient} from "@angular/common/http";
 
-@Injectable()
-export class DataService {
+@Injectable({
+  providedIn: 'root'
+})
+export class CalendarService {
 
-  static colors = {
+  static readonly colors = {
     green: "#6aa84f",
     yellow: "#f1c232",
     red: "#cc4125",
@@ -27,7 +31,7 @@ export class DataService {
       text: "Event 2",
       start: DayPilot.Date.today().firstDayOfWeek().addDays(1).addHours(12),
       end: DayPilot.Date.today().firstDayOfWeek().addDays(1).addHours(15),
-      backColor: DataService.colors.green,
+      backColor: CalendarService.colors.green,
       participants: 1,
     },
     {
@@ -35,7 +39,7 @@ export class DataService {
       text: "Event 3",
       start: DayPilot.Date.today().firstDayOfWeek().addDays(2).addHours(13),
       end: DayPilot.Date.today().firstDayOfWeek().addDays(2).addHours(16),
-      backColor: DataService.colors.yellow,
+      backColor: CalendarService.colors.yellow,
       participants: 3,
     },
     {
@@ -43,12 +47,12 @@ export class DataService {
       text: "Event 4",
       start: DayPilot.Date.today().firstDayOfWeek().addDays(3).addHours(11),
       end: DayPilot.Date.today().firstDayOfWeek().addDays(3).addHours(15),
-      backColor: DataService.colors.red,
+      backColor: CalendarService.colors.red,
       participants: 4,
     },
   ];
 
-  constructor(private http : HttpClient){
+  constructor(private readonly http : HttpClient){
   }
 
   getEvents(from: DayPilot.Date, to: DayPilot.Date): Observable<any[]> {
@@ -65,13 +69,12 @@ export class DataService {
 
   getColors(): any[] {
       const colors = [
-        {name: "Green", id: DataService.colors.green},
-        {name: "Yellow", id: DataService.colors.yellow},
-        {name: "Red", id: DataService.colors.red},
-        {name: "Gray", id: DataService.colors.gray},
-        {name: "Blue", id: DataService.colors.blue},
+        {name: "Green", id: CalendarService.colors.green},
+        {name: "Yellow", id: CalendarService.colors.yellow},
+        {name: "Red", id: CalendarService.colors.red},
+        {name: "Gray", id: CalendarService.colors.gray},
+        {name: "Blue", id: CalendarService.colors.blue},
       ];
       return colors;
   }
-
 }

@@ -18,7 +18,10 @@ const routes: Routes = [
       {
         path: 'auth',
         loadChildren: () => import('./pages/authentication/authentication.module').then((m) => m.AuthenticationModule)
-
+      },
+      {
+        path: 'calendar',
+        loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
       }
     ]
   },
@@ -47,7 +50,12 @@ const routes: Routes = [
       {
         path: 'dashboard',
         // loadComponent: () => import('./components/farmer/farmer-dashboard/farmer-dashboard.component').then((m) => m.FarmerDashboardComponent),
-      }
+      },
+
+      {
+        path: 'calendar',
+        loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
+      },
 
     ]
   },
