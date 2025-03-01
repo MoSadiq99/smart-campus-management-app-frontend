@@ -9,9 +9,9 @@ import {
   DayPilotNavigatorComponent
 } from '@daypilot/daypilot-lite-angular';
 import { CalendarService } from './calendar.service';
-import { EventCreateDto, EventStatus } from 'src/app/models/event-create-dto';
-import { environment } from 'src/environments/environment';
-import { result } from 'lodash';
+import { EventCreateDto } from 'src/app/models/event-create-dto';
+import { EventStatus } from 'src/app/models/event-enums';
+import { EventCreateForm, EventEditForm } from 'src/app/models/calender-forms';
 
 @Component({
   selector: 'app-event-calendar',
@@ -172,8 +172,13 @@ export class EventCalendarComponent implements AfterViewInit {
     //   this.events = result;
     // });
 
-    this.http.get<DayPilot.EventData[]>(`${environment.apiUrl}/api/events?from=${from}&to=${to}`).subscribe((result) => {
-      this.events = result;
+    this.ds.getEvents(from, to).subscribe({
+      next: (response) => {
+        this.events = response;
+      },
+      error: (error) => {
+        console.error('Error fetching events:', error);
+      }
     });
   }
 
@@ -238,15 +243,7 @@ export class EventCalendarComponent implements AfterViewInit {
   }
 
   async onTimeRangeSelected(args: any) {
-    const form = [
-      { name: 'Name', id: 'name', required: true },
-      { name: 'OrganizerID', id: 'organizerId', type: 'number', required: true },
-      { name: 'Description', id: 'description', type: 'text' },
-      { name: 'Location', id: 'location', type: 'text', required: true },
-      { name: 'Capacity', id: 'capacity', type: 'number' }
-    ];
-
-    const modal = await DayPilot.Modal.form(form);
+    const modal = await DayPilot.Modal.form(EventCreateForm);
 
     if (modal.canceled) {
       return;
@@ -265,36 +262,31 @@ export class EventCalendarComponent implements AfterViewInit {
       capacity: modal.result.capacity,
       status: EventStatus.UPCOMING
     };
-    dp.events.add(
-      new DayPilot.Event({
-        start: args.start,
-        end: args.end,
-        id: DayPilot.guid(),
-        text: modal.result
-      })
-    );
 
-    this.http.post(`${environment.apiUrl}/api/events`, newEvent).subscribe(
-      (response) => {
+    this.ds.createEvent(newEvent).subscribe({
+      next: (response) => {
         console.log('Event created:', response);
       },
-      (error) => {
+      error: (error) => {
         console.error('Error creating event:', error);
       }
-    );
+    });
   }
 
   async onEventClick(args: any) {
-    const form = [
-      { name: 'Text', id: 'text' },
-      { name: 'Start', id: 'start', dateFormat: 'MM/dd/yyyy', type: 'datetime' },
-      { name: 'End', id: 'end', dateFormat: 'MM/dd/yyyy', type: 'datetime' },
-      { name: 'Color', id: 'backColor', type: 'select', options: this.ds.getColors() }
-    ];
-
     const data = args.e.data;
 
-    const modal = await DayPilot.Modal.form(form, data);
+    const formData = {
+      name: data.text,
+      start: data.start,
+      end: data.end,
+      organizerId: data.tags.organizerId,
+      location: data.tags.location,
+      capacity: data.tags.capacity,
+      backColor: data.backColor
+    };
+
+    const modal = await DayPilot.Modal.form(EventEditForm, formData);
 
     if (modal.canceled) {
       return;
