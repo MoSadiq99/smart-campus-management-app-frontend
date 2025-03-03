@@ -4,10 +4,15 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 
 // project import
 import { SpinnerComponent } from './theme/shared/components/spinner/spinner.component';
+import { CalendarModule } from 'angular-calendar';
 
 @Component({
   selector: 'app-root',
-  imports: [SpinnerComponent, RouterModule],
+  imports: [
+    SpinnerComponent,
+    RouterModule,
+    CalendarModule
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

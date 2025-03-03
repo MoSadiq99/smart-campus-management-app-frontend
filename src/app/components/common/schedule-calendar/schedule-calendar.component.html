@@ -1,0 +1,67 @@
+<div class="row text-center">
+  <div class="col-md-4">
+    <div class="btn-group">
+      <button (click)="previous()" class="btn btn-primary">
+        Previous
+      </button>
+      <button (click)="today()" class="btn btn-outline-secondary">
+        Today
+      </button>
+      <button (click)="next()" class="btn btn-primary">
+        Next
+      </button>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | date: 'MMMM y' }}</h3> <!-- Display current month and year -->
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">
+      <button
+        (click)="setView(CalendarView.Month)"
+        [class.active]="view === CalendarView.Month"
+        class="btn btn-primary"
+      >
+        Month
+      </button>
+      <button
+        (click)="setView(CalendarView.Week)"
+        [class.active]="view === CalendarView.Week"
+        class="btn btn-primary"
+      >
+        Week
+      </button>
+      <button
+        (click)="setView(CalendarView.Day)"
+        [class.active]="view === CalendarView.Day"
+        class="btn btn-primary"
+      >
+        Day
+      </button>
+    </div>
+  </div>
+</div>
+<br />
+<div [ngSwitch]="view">
+  <mwl-calendar-month-view
+    *ngSwitchCase="CalendarView.Month"
+    [viewDate]="viewDate"
+    [events]="calendarEvents"
+    (beforeViewRender)="updateCalendarEvents($event)"
+  >
+  </mwl-calendar-month-view>
+  <mwl-calendar-week-view
+    *ngSwitchCase="CalendarView.Week"
+    [viewDate]="viewDate"
+    [events]="calendarEvents"
+    (beforeViewRender)="updateCalendarEvents($event)"
+  >
+  </mwl-calendar-week-view>
+  <mwl-calendar-day-view
+    *ngSwitchCase="CalendarView.Day"
+    [viewDate]="viewDate"
+    [events]="calendarEvents"
+    (beforeViewRender)="updateCalendarEvents($event)"
+  >
+  </mwl-calendar-day-view>
+</div>

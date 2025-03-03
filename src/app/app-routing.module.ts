@@ -61,6 +61,11 @@ const routes: Routes = [
         path: 'resource-calendar',
 
         loadComponent: () => import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
+      },
+
+      {
+        path: 'schedule-calendar',
+        loadComponent: () => import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
       }
 
     ]
