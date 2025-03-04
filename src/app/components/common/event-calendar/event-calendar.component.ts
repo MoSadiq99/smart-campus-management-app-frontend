@@ -9,9 +9,10 @@ import {
   DayPilotNavigatorComponent
 } from '@daypilot/daypilot-lite-angular';
 import { CalendarService } from './calendar.service';
-import { EventCreateDto } from 'src/app/models/event-create-dto';
 import { EventStatus } from 'src/app/models/event-enums';
 import { EventCreateForm, EventEditForm } from 'src/app/models/calender-forms';
+import { EventDto, EventCreateDto } from 'src/app/models/event-dto';
+import { at } from 'lodash';
 
 @Component({
   selector: 'app-event-calendar',
@@ -168,9 +169,6 @@ export class EventCalendarComponent implements AfterViewInit {
   loadEvents(): void {
     const from = this.nav.control.visibleStart();
     const to = this.nav.control.visibleEnd();
-    // this.ds.getEvents(from, to).subscribe((result) => {
-    //   this.events = result;
-    // });
 
     this.ds.getEvents(from, to).subscribe({
       next: (response) => {
@@ -276,6 +274,8 @@ export class EventCalendarComponent implements AfterViewInit {
   async onEventClick(args: any) {
     const data = args.e.data;
 
+    console.log('Event clicked:', data);
+
     const formData = {
       name: data.text,
       start: data.start,
@@ -283,6 +283,8 @@ export class EventCalendarComponent implements AfterViewInit {
       organizerId: data.tags.organizerId,
       location: data.tags.location,
       capacity: data.tags.capacity,
+      description: data.tags.description,
+      attendees: data.tags.attendeeIds,
       backColor: data.backColor
     };
 
@@ -294,6 +296,26 @@ export class EventCalendarComponent implements AfterViewInit {
 
     const dp = args.control;
 
-    dp.events.update(modal.result);
+    const updatedEvent: EventDto = {
+      eventId: data.id,
+      title: modal.result.name,
+      description: modal.result.description,
+      startTime: modal.result.start,
+      endTime: modal.result.end,
+      location: modal.result.location,
+      capacity: modal.result.capacity,
+      organizerId: modal.result.organizerId,
+      status: data.tags.status,
+      attendeeIds: data.tags.attendeeIds
+    };
+
+    this.ds.updateEvent(updatedEvent).subscribe({
+      next: (response) => {
+        console.log('Event updated:', response);
+      },
+      error: (error) => {
+        console.error('Error updating event:', error);
+      }
+    });
   }
 }

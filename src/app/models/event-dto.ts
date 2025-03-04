@@ -12,3 +12,14 @@ export interface EventDto {
   status: EventStatus;
   attendeeIds: number[];
 }
+
+export interface EventCreateDto {
+  organizerId: number;
+  title: string;
+  description: string;
+  startTime: Date;
+  endTime: Date;
+  location: string;
+  capacity: number;
+  status: EventStatus;
+}
