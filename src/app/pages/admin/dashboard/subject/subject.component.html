@@ -1,1 +1,24 @@
-<p>subject works!</p>
+<app-popup-modal [formFields]="subjectForm" [entityType]="'subject'" [service]="subjectService"></app-popup-modal>
+
+<div class="console-body">
+  <h2>Available Subjects</h2>
+
+  <button (click)="createSubject()" class="btn-create">Create New Subject</button>
+
+  <table class="console-table">
+    <thead>
+      <tr>
+        <th>Subject ID</th>
+        <th>Subject Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subject of subjects" (click)="goToSubject(subject.subjectId)" style="cursor: pointer" tabindex="0" role="link">
+        <td>{{ subject.subjectId }}</td>
+        <td>{{ subject.subjectName }}</td>
+        <td>{{ subject.description }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

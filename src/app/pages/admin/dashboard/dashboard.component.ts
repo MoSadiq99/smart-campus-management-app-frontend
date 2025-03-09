@@ -3,11 +3,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-tabs',
+  selector: 'app-dashboard',
   imports: [RouterModule, MatTabsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-
-}
+export class DashboardComponent {}

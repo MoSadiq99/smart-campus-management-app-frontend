@@ -17,11 +17,16 @@ export const EventEditForm = [
 ];
 
 export const CourseCreateForm = [
-  { name: 'Course Name', id: 'courseName', type: 'text', required: 'true' },
+  { name: 'Course Name', id: 'courseName', type: 'text', required: true },
   { name: 'Course Code', id: 'courseCode', type: 'text', required: true },
   { name: 'Description', id: 'description', type: 'text', required: false },
   { name: 'Start Date', id: 'startDate', type: 'date', required: true },
   { name: 'End Date', id: 'endDate', type: 'date', required: true },
   { name: 'Credits', id: 'credits', type: 'number', required: true },
   { name: 'Cordinator ID', id: 'cordinatorId', type: 'number', required: true }
+];
+
+export const SubjectCreateForm = [
+  { name: 'Subject Name', id: 'subjectName', type: 'text', required: true },
+  { name: 'Description', id: 'description', type: 'text', required: false }
 ];

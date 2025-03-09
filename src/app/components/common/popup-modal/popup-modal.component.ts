@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as bootstrap from 'bootstrap';
-import { CourseComponent } from 'src/app/pages/admin/dashboard/course/course.component';
-import { CourseService } from 'src/app/pages/admin/dashboard/course/course.service';
+import { Observable } from 'rxjs';
+
+interface EntityService {
+  create(data: any): Observable<any>;
+}
 
 @Component({
   selector: 'app-popup-modal',
@@ -17,8 +20,8 @@ export class PopupModalComponent implements AfterViewInit {
   private modal!: bootstrap.Modal;
   formData: any = {};
   formValid: boolean = true;
-
-  constructor(private courseService: CourseService, private courseComponent: CourseComponent) {}
+  @Input() entityType!: 'course' | 'subject';
+  @Input() service!: EntityService;
 
   ngAfterViewInit() {
     if (this.popupModal) {
@@ -27,18 +30,16 @@ export class PopupModalComponent implements AfterViewInit {
   }
 
   openModal() {
-    console.log("Open Modal");
+    console.log('Open Modal');
     if (this.modal) {
       this.modal.show();
     } else {
-      console.error("Modal instance not initialized");
+      console.error('Modal instance not initialized');
     }
   }
 
   submitForm() {
-    console.log("Form Submitted:", this.formData);
-
-    this.courseService.createCourse(this.formData).subscribe({
+    this.service.create(this.formData).subscribe({
       next: (response) => {
         console.log('Event created:', response);
       },
@@ -47,12 +48,11 @@ export class PopupModalComponent implements AfterViewInit {
       }
     });
 
-    this.courseComponent.loadCourses()
     this.modal.hide();
   }
 
   isFormValid(): boolean {
-    return this.formFields.every(field => {
+    return this.formFields.every((field) => {
       const value = this.formData[field.id];
       if (field.required && !value) return false;
       if (field.minlength && value.length < field.minlength) return false;

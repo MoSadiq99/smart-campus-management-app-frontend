@@ -7,9 +7,9 @@ import { LecturerComponent } from './theme/layout/lecturer/lecturer.component';
 import { CourseComponent } from './pages/admin/dashboard/course/course.component';
 import { SubjectComponent } from './pages/admin/dashboard/subject/subject.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
 
 const routes: Routes = [
-
   {
     path: '',
     component: GuestComponent,
@@ -42,11 +42,12 @@ const routes: Routes = [
         loadComponent: () => import('./pages/admin/dashboard/dashboard.component').then((m) => m.DashboardComponent),
         children: [
           { path: 'course', component: CourseComponent },
+          { path: 'course/:courseCode', component: CourseDetailComponent },
           { path: 'subject', component: SubjectComponent },
+          { path: 'subject/:subjectId', component: SubjectComponent },
           { path: 'user', component: SubjectComponent }
         ]
-      },
-
+      }
     ]
   },
   {
@@ -61,7 +62,7 @@ const routes: Routes = [
       },
 
       {
-        path: 'dashboard',
+        path: 'dashboard'
         // loadComponent: () => import('./components/farmer/farmer-dashboard/farmer-dashboard.component').then((m) => m.FarmerDashboardComponent),
       },
 
@@ -73,14 +74,15 @@ const routes: Routes = [
       {
         path: 'resource-calendar',
 
-        loadComponent: () => import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
+        loadComponent: () =>
+          import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
       },
 
       {
         path: 'schedule-calendar',
-        loadComponent: () => import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
+        loadComponent: () =>
+          import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
       }
-
     ]
   },
   {
@@ -93,10 +95,9 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
-        path: 'dashboard',
+        path: 'dashboard'
         // loadComponent: () => import('./components/buyer/buyer-dashboard/buyer-dashboard.component').then((m) => m.BuyerDashboardComponent),
-
-      },
+      }
     ]
   }
 ];

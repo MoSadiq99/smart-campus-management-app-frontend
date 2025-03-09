@@ -8,15 +8,22 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class CourseService {
-
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
   public getCourses(): Observable<CourseDto[]> {
-    console.log("Loading Course: GET")
-    return this.http.get<CourseDto[]>(`${environment.apiUrl}/courses`)
+    console.log('Loading Course: GET');
+    return this.http.get<CourseDto[]>(`${environment.apiUrl}/courses`);
   }
 
-  public createCourse(newCourse: CourseCreateDto): Observable<any> {
+  public create(newCourse: CourseCreateDto): Observable<any> {
     return this.http.post(`${environment.apiUrl}/courses`, newCourse);
+  }
+
+  public getCourseByCode(courseCode: string): Observable<any> {
+    return this.http.get<CourseDto>(`${environment.apiUrl}/courses/${courseCode}`);
+  }
+
+  public updateCourse(course: CourseDto): Observable<any> {
+    return this.http.put<CourseDto>(`${environment.apiUrl}/courses/${course.courseId}`, course);
   }
 }
