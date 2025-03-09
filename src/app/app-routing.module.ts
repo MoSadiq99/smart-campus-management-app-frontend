@@ -4,7 +4,6 @@ import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { StudentComponent } from './theme/layout/student/student.component';
 import { LecturerComponent } from './theme/layout/lecturer/lecturer.component';
-import { AdminConsoleComponent } from './components/common/admin-console/admin-console.component';
 import { CourseComponent } from './pages/admin/dashboard/course/course.component';
 import { SubjectComponent } from './pages/admin/dashboard/subject/subject.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -34,11 +33,17 @@ const routes: Routes = [
     component: AdminComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
         path: 'dashboard',
         loadComponent: () => import('./pages/admin/dashboard/dashboard.component').then((m) => m.DashboardComponent),
         children: [
           { path: 'course', component: CourseComponent },
-          { path: 'subject', component: SubjectComponent }
+          { path: 'subject', component: SubjectComponent },
+          { path: 'user', component: SubjectComponent }
         ]
       },
 

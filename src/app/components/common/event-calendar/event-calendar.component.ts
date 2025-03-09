@@ -10,9 +10,8 @@ import {
 } from '@daypilot/daypilot-lite-angular';
 import { CalendarService } from './calendar.service';
 import { EventStatus } from 'src/app/models/event-enums';
-import { EventCreateForm, EventEditForm } from 'src/app/models/calender-forms';
+import { EventCreateForm, EventEditForm } from 'src/app/models/input-forms';
 import { EventDto, EventCreateDto } from 'src/app/models/event-dto';
-import { at } from 'lodash';
 
 @Component({
   selector: 'app-event-calendar',

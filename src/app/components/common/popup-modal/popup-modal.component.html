@@ -1,0 +1,43 @@
+<div #popupModal class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Course</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <div class="modal-body">
+          <form #form="ngForm">
+            <div *ngFor="let field of formFields" class="mb-3">
+              <label [for]="field.id" class="form-label">{{ field.name }}</label>              
+              <input 
+                [id]="field.id" 
+                [type]="field.type" 
+                class="form-control" 
+                [(ngModel)]="formData[field.id]"
+                [name]="field.id"
+                [required]="field.required"
+                [minlength]="field.minlength"
+                [maxlength]="field.maxlength"
+                #fieldInput="ngModel"
+                [ngClass]="{'is-invalid': fieldInput.invalid && fieldInput.touched}">
+              
+              <!-- Validation error messages -->
+              <div *ngIf="fieldInput.invalid && fieldInput.touched" class="invalid-feedback">
+                <div *ngIf="fieldInput.errors?.['required']">{{ field.name }} is required.</div>
+                <div *ngIf="fieldInput.errors?.['minlength']">{{ field.name }} must be at least {{ field.minlength }} characters.</div>
+                <div *ngIf="fieldInput.errors?.['maxlength']">{{ field.name }} cannot exceed {{ field.maxlength }} characters.</div>
+              </div>
+            </div>
+          </form>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <!-- Disable button if form is invalid -->
+          <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="form.invalid">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
