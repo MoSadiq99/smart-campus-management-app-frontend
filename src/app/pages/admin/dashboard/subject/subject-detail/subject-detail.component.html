@@ -1,0 +1,45 @@
+<div class="subject-detail">
+  <h2 class="mb-4">Edit Subject Details</h2>
+
+  <form [formGroup]="subjectForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="subjectId" class="form-label">Subject ID:</label>
+      <input type="number" id="subjectId" class="form-control" formControlName="subjectId" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="subjectName" class="form-label">Subject Name:</label>
+      <input type="text" id="subjectName" class="form-control" formControlName="subjectName" />
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label for="description" class="form-label">Description:</label>
+      <textarea id="description" class="form-control" formControlName="description" rows="3"></textarea>
+    </div>
+
+    <!-- Courses -->
+    <div class="mb-3">
+      <label for="courseId" class="form-label">Assigned to courses (Modify in courses to add or remove):</label>
+      <ng-select
+        [items]="courses"
+        [readonly]="true"
+        bindLabel="courseName"
+        bindValue="courseId"
+        [multiple]="true"
+        [closeOnSelect]="false"
+        placeholder="Subject not assigned to any courses..."
+        formControlName="courseIds"
+      >
+        <ng-template ng-option-tmp let-item="item">
+          <span>{{ item.name }}</span>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="subjectForm.invalid">Save Changes</button>
+    </div>
+  </form>
+</div>

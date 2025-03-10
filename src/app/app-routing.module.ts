@@ -4,9 +4,13 @@ import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
 import { StudentComponent } from './theme/layout/student/student.component';
 import { LecturerComponent } from './theme/layout/lecturer/lecturer.component';
+import { CourseComponent } from './pages/admin/dashboard/course/course.component';
+import { SubjectComponent } from './pages/admin/dashboard/subject/subject.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
+import { SubjectDetailComponent } from './pages/admin/dashboard/subject/subject-detail/subject-detail.component';
 
 const routes: Routes = [
-
   {
     path: '',
     component: GuestComponent,
@@ -30,10 +34,21 @@ const routes: Routes = [
     component: AdminComponent,
     children: [
       {
-        path: 'dashboard',
-        // loadComponent: () => import('./components/admin/dashboard/dashboard.component').then((c) => c.DashboardComponent)
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
       },
-
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./pages/admin/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+        children: [
+          { path: 'course', component: CourseComponent },
+          { path: 'course/:courseCode', component: CourseDetailComponent },
+          { path: 'subject', component: SubjectComponent },
+          { path: 'subject/:subjectId', component: SubjectDetailComponent },
+          { path: 'user', component: SubjectComponent }
+        ]
+      }
     ]
   },
   {
@@ -48,7 +63,7 @@ const routes: Routes = [
       },
 
       {
-        path: 'dashboard',
+        path: 'dashboard'
         // loadComponent: () => import('./components/farmer/farmer-dashboard/farmer-dashboard.component').then((m) => m.FarmerDashboardComponent),
       },
 
@@ -60,14 +75,15 @@ const routes: Routes = [
       {
         path: 'resource-calendar',
 
-        loadComponent: () => import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
+        loadComponent: () =>
+          import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
       },
 
       {
         path: 'schedule-calendar',
-        loadComponent: () => import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
+        loadComponent: () =>
+          import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
       }
-
     ]
   },
   {
@@ -80,16 +96,15 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
-        path: 'dashboard',
+        path: 'dashboard'
         // loadComponent: () => import('./components/buyer/buyer-dashboard/buyer-dashboard.component').then((m) => m.BuyerDashboardComponent),
-
-      },
+      }
     ]
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), BrowserModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
