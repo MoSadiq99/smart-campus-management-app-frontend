@@ -23,21 +23,16 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/fake-data"
-            ],
+            "assets": ["src/favicon.ico", "src/assets", "src/fake-data"],
             "styles": [
               "@angular/material/prebuilt-themes/cyan-orange.css",
               "node_modules/bootstrap/scss/bootstrap.scss",
+              "node_modules/@ng-select/ng-select/themes/default.theme.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/@popperjs/core/dist/umd/popper.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
+            "scripts": ["node_modules/@popperjs/core/dist/umd/popper.min.js", "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
           },
           "configurations": {
             "production": {
@@ -111,10 +106,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }
@@ -122,8 +114,6 @@
   },
   "cli": {
     "analytics": "0eaad924-6e2a-434b-aad5-51d9f46776fc",
-    "schematicCollections": [
-      "angular-eslint"
-    ]
+    "schematicCollections": ["angular-eslint"]
   }
 }
