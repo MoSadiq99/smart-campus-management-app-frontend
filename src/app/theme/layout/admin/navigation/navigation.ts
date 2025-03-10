@@ -33,21 +33,21 @@ export const NavigationItems: NavigationItem[] = [
   },
   {
     id: 'ui-element',
-    title: 'UI ELEMENT',
+    title: 'MANAGE',
     type: 'group',
     icon: 'icon-ui',
     children: [
       {
         id: 'basic',
-        title: 'Component',
+        title: 'CRUD',
         type: 'collapse',
         icon: 'feather icon-box',
         children: [
           {
             id: 'button',
-            title: 'Button',
+            title: 'Chat',
             type: 'item',
-            url: '/basic/button'
+            url: 'admin/chat',
           },
           {
             id: 'badges',
@@ -80,46 +80,6 @@ export const NavigationItems: NavigationItem[] = [
             url: '/basic/typography'
           }
         ]
-      }
-    ]
-  },
-  {
-    id: 'forms',
-    title: 'Forms & Tables',
-    type: 'group',
-    icon: 'icon-group',
-    children: [
-      {
-        id: 'forms-element',
-        title: 'Form Elements',
-        type: 'item',
-        url: '/forms/basic',
-        classes: 'nav-item',
-        icon: 'feather icon-file-text'
-      },
-      {
-        id: 'tables',
-        title: 'Tables',
-        type: 'item',
-        url: '/tables/bootstrap',
-        classes: 'nav-item',
-        icon: 'feather icon-server'
-      }
-    ]
-  },
-  {
-    id: 'chart-maps',
-    title: 'Chart',
-    type: 'group',
-    icon: 'icon-charts',
-    children: [
-      {
-        id: 'apexChart',
-        title: 'ApexChart',
-        type: 'item',
-        url: 'apexchart',
-        classes: 'nav-item',
-        icon: 'feather icon-pie-chart'
       }
     ]
   },

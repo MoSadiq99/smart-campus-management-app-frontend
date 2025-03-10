@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -14,6 +15,8 @@ import { Frequency, RRule, Weekday } from 'rrule';
 import moment from 'moment-timezone';
 import { ViewPeriod, EventColor } from 'calendar-utils';
 import { colors } from 'src/app/theme/utils/colors';
+import { HttpClient } from '@angular/common/http';
+import { ScheduleCreateDto } from 'src/app/models/dto/ScheduleCreateDto';
 
 interface RecurringEvent {
   title: string;
@@ -45,37 +48,36 @@ export class ScheduleCalendarComponent {
   viewDate = moment().toDate();
   calendarEvents: CalendarEvent[] = [];
   viewPeriod!: ViewPeriod;
-  CalendarView = CalendarView; // Expose CalendarView enum to the template
+  CalendarView = CalendarView;
 
-  recurringEvents: RecurringEvent[] = [
-    {
-      title: 'Recurs on the 5th of each month',
-      color: colors['yellow'],
-      rrule: {
-        freq: RRule.MONTHLY,
-        bymonthday: 5,
-      },
-    },
-    {
-      title: 'Recurs yearly on the 10th of the current month',
-      color: colors['green'],
-      rrule: {
-        freq: RRule.YEARLY,
-        bymonth: moment().month() + 1,
-        bymonthday: 10,
-      },
-    },
-    {
-      title: 'Recurs weekly on mondays',
-      color: colors['red'],
-      rrule: {
-        freq: RRule.WEEKLY,
-        byweekday: [new Weekday(0)],
-      },
-    },
-  ];
+  recurringEvents: RecurringEvent[] = [];
 
-  constructor(private readonly cdr: ChangeDetectorRef) {}
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly http: HttpClient
+  ) {
+    this.fetchSchedules();
+  }
+
+  // Fetch schedules from the backend
+  fetchSchedules(): void {
+    const userId = 1; // Replace with actual user ID
+    this.http.get(`/api/users/${userId}/schedules`).subscribe((schedules: any) => {
+      this.calendarEvents = schedules.map((schedule: any) => ({
+        title: schedule.title,
+        start: new Date(schedule.time),
+        color: colors['blue'],
+      }));
+      this.cdr.detectChanges();
+    });
+  }
+
+  // Add a new schedule
+  addSchedule(schedule: ScheduleCreateDto): void {
+    this.http.post('/api/schedules', schedule).subscribe(() => {
+      this.fetchSchedules(); // Refresh the calendar
+    });
+  }
 
   // Handle "Previous" button click
   previous(): void {

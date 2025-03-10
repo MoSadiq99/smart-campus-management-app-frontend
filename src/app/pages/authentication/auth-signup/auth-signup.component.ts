@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthenticationService } from 'src/app/services/authentication.service';
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { Router, RouterLink } from '@angular/router';
 
 
@@ -21,6 +21,7 @@ export class AuthSignupComponent {
     private fb: FormBuilder,
     private authService: AuthenticationService,
     private router: Router
+
   ) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
@@ -29,7 +30,6 @@ export class AuthSignupComponent {
       phone: ['', [Validators.required, Validators.pattern('\\d{10}')]],
       address: ['', Validators.required],
       userType: ['', Validators.required]
-      // roles: [[], Validators.required]
     });
   }
 
@@ -39,12 +39,6 @@ export class AuthSignupComponent {
     console.log('Form Value:', this.signupForm.value);
     if (this.signupForm.valid) {
       const formValue = this.signupForm.value;
-      // formValue.roles = [formValue.userType]; // Assuming userType maps directly to roles
-      if (formValue.userType === 'FARMER') {
-        formValue.roles = ['ROLE_FARMER'];
-      } else if (formValue.userType === 'BUYER') {
-        formValue.roles = ['ROLE_BUYER'];
-      }
       this.authService.register(formValue).subscribe({
         next: (response) => {
           console.log('Registration successful:', response);

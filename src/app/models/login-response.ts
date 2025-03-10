@@ -1,12 +1,6 @@
-enum RoleEnum {
-  ROLE_ADMIN = 'ROLE_ADMIN',
-  ROLE_FARMER = 'ROLE_FARMER',
-  ROLE_BUYER = 'ROLE_BUYER'
-}
+import { UserDto } from "./dto/UserDto";
 
 export interface LoginResponse {
-  email?: string;
   token?: string;
-  userId?: number;
-  roles: RoleEnum[];
+  user: UserDto;
 }

@@ -1,0 +1,190 @@
+<div class="row">
+  <div class="col-sm-12">
+    <!-- Summary Statistics -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card bg-primary-subtle text-dark h-100">
+          <div class="card-body">
+            <h5 class="card-title">Total Resources</h5>
+            <p class="card-text">{{ resources.length }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-success-subtle text-dark h-100">
+          <div class="card-body">
+            <h5 class="card-title">Available Resources</h5>
+            <p class="card-text">{{ getAvailableResources().length }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-warning-subtle text-dark h-100">
+          <div class="card-body">
+            <h5 class="card-title">In-Use Resources</h5>
+            <p class="card-text">{{ getInUseResources().length }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter and Create Options -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="typeFilter" class="form-label">Filter by Resource Type</label>
+        <select id="typeFilter" class="form-select" [(ngModel)]="selectedResourceType" (change)="filterResources()">
+          <option value="All">All</option>
+          <option *ngFor="let type of resourceTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+      <div class="col-md-6 text-end">
+        <button class="btn btn-outline-dark mt-4" (click)="openCreateModal(createResourceModal)">
+          <i class="bi bi-plus-circle"></i> Add New Resource
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<div class="row">
+  <div *ngFor="let resource of filteredResources" class="col-md-4 mb-4">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title">{{ resource.resourceName }}</h5>
+        <span class="badge" [ngClass]="{
+          'bg-success': resource.availabilityStatus === 'AVAILABLE',
+          'bg-warning': resource.availabilityStatus === 'IN_USE',
+          'bg-danger': resource.availabilityStatus === 'MAINTENANCE'
+        }">
+          {{ resource.availabilityStatus }}
+        </span>
+      </div>
+      <div class="card-body">
+        <p><strong>Type:</strong> {{ resource.type }}</p>
+        <p><strong>Location:</strong> {{ resource.location }}</p>
+        <p><strong>Capacity:</strong> {{ resource.capacity }}</p>
+      </div>
+      <div class="card-footer d-flex justify-content-between">
+        <button class="btn btn-sm btn-primary" (click)="openEditModal(editResourceModal, resource)">Edit</button>
+        <button class="btn btn-sm btn-danger" (click)="deleteResource(resource)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Resource Modal (unchanged) -->
+<ng-template #createResourceModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add New Resource</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="createResource()" #resourceForm="ngForm">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="name" class="form-label">Resource Name</label>
+          <input type="text" class="form-control" id="name" [(ngModel)]="newResource.resourceName" name="name" required />
+          <div *ngIf="resourceForm.submitted && resourceForm.controls['name']?.errors" class="text-danger">
+            Resource Name is required.
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="type" class="form-label">Type</label>
+          <select class="form-select" id="type" [(ngModel)]="newResource.type" name="type" required>
+            <option value="" disabled selected>Select Type</option>
+            <option *ngFor="let type of resourceTypes" [value]="type">{{ type }}</option>
+          </select>
+          <div *ngIf="resourceForm.submitted && resourceForm.controls['type']?.errors" class="text-danger">
+            Type is required.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="location" class="form-label">Location</label>
+          <input type="text" class="form-control" id="location" [(ngModel)]="newResource.location" name="location" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="capacity" class="form-label">Capacity</label>
+          <input type="number" class="form-control" id="capacity" [(ngModel)]="newResource.capacity" name="capacity" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="status" class="form-label">Availability Status</label>
+          <select class="form-select" id="status" [(ngModel)]="newResource.availabilityStatus" name="status" required>
+            <option value="AVAILABLE">Available</option>
+            <option value="IN_USE">In Use</option>
+            <option value="MAINTENANCE">Maintenance</option>
+          </select>
+          <div *ngIf="resourceForm.submitted && resourceForm.controls['status']?.errors" class="text-danger">
+            Status is required.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark">Create</button>
+        <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss()">Close</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Update Resource Modal -->
+<ng-template #editResourceModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Update Resource</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="updateResource()" #editResourceForm="ngForm">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="editName" class="form-label">Resource Name</label>
+          <input type="text" class="form-control" id="editName" [(ngModel)]="selectedResource.resourceName" name="editName" required />
+          <div *ngIf="editResourceForm.submitted && editResourceForm.controls['editName']?.errors" class="text-danger">
+            Resource Name is required.
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="editType" class="form-label">Type</label>
+          <select class="form-select" id="editType" [(ngModel)]="selectedResource.type" name="editType" required>
+            <option value="" disabled>Select Type</option>
+            <option *ngFor="let type of resourceTypes" [value]="type">{{ type }}</option>
+          </select>
+          <div *ngIf="editResourceForm.submitted && editResourceForm.controls['editType']?.errors" class="text-danger">
+            Type is required.
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="editLocation" class="form-label">Location</label>
+          <input type="text" class="form-control" id="editLocation" [(ngModel)]="selectedResource.location" name="editLocation" />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="editCapacity" class="form-label">Capacity</label>
+          <input type="number" class="form-control" id="editCapacity" [(ngModel)]="selectedResource.capacity" name="editCapacity" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="editStatus" class="form-label">Availability Status</label>
+          <select class="form-select" id="editStatus" [(ngModel)]="selectedResource.availabilityStatus" name="editStatus" required>
+            <option value="AVAILABLE">Available</option>
+            <option value="IN_USE">In Use</option>
+          </select>
+          <div *ngIf="editResourceForm.submitted && editResourceForm.controls['editStatus']?.errors" class="text-danger">
+            Status is required.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark">Update</button>
+        <button type="button" class="btn btn-outline-danger" (click)="modal.dismiss()">Close</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthenticationService } from 'src/app/services/authentication.service';
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -34,8 +34,8 @@ export class AuthSigninComponent {
       this.authService.login({ email, password }).subscribe({
         next: (response) => {
 
-          const roles: string [] = response.roles;
-          this.redirectBasedOnRole(roles);
+          const role: string = response.user.roleName;
+          this.redirectBasedOnRole(role);
 
         },
         error: (err) => {
@@ -45,13 +45,13 @@ export class AuthSigninComponent {
     }
   }
 
-  redirectBasedOnRole(roles: string []) {
-    if (roles.includes('ROLE_ADMIN')) {
+  redirectBasedOnRole(role: string) {
+    if (role === 'ROLE_ADMIN') {
       this.router.navigate(['/admin/dashboard']);
-    } else if (roles.includes('ROLE_FARMER')) {
-      this.router.navigate(['/farmer/dashboard']);
-    } else if (roles.includes('ROLE_BUYER')) {
-      this.router.navigate(['/buyer/dashboard']);
+    } else if (role === 'ROLE_STUDENT') {
+      this.router.navigate(['/student/dashboard']);
+    } else if (role === 'ROLE_LECTURER') {
+      this.router.navigate(['/lecturer/dashboard']);
     } else {
       this.router.navigate(['/auth/signin']);
     }

@@ -19,10 +19,6 @@ const routes: Routes = [
         path: 'auth',
         loadChildren: () => import('./pages/authentication/authentication.module').then((m) => m.AuthenticationModule)
       },
-      {
-        path: 'calendar',
-        loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
-      }
     ]
   },
   {
@@ -31,8 +27,26 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        // loadComponent: () => import('./components/admin/dashboard/dashboard.component').then((c) => c.DashboardComponent)
+        loadComponent: () => import('./components/admin/dashboard/admin-dash/admin-dash.component').then((m) => m.AdminDashComponent)
       },
+
+      {
+        path: 'resource',
+        loadComponent: () => import('./components/admin/resource/resource.component').then((c) => c.ResourceComponent)
+      },
+
+      {
+        path: 'event-calendar',
+        loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
+      },
+      {
+        path: 'chat',
+        loadComponent: () => import('./components/common/chat/group-chat.component').then((m) => m.GroupChatComponent)
+      },
+      {
+        path: 'create-group',
+        loadComponent: () => import('./components/admin/create-group/create-group.component').then((m) => m.CreateGroupComponent)
+      }
 
     ]
   },
@@ -53,7 +67,7 @@ const routes: Routes = [
       },
 
       {
-        path: 'calendar',
+        path: 'event-calendar',
         loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
       },
 
