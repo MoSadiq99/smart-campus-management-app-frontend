@@ -21,4 +21,8 @@ export class SubjectService {
   public getSubjectById(subjectId: string): Observable<SubjectDto> {
     return this.http.get<SubjectDto>(`${environment.apiUrl}/subjects/${subjectId}`);
   }
+
+  public updateSubject(subject: SubjectDto): Observable<SubjectDto> {
+    return this.http.put<SubjectDto>(`${environment.apiUrl}/subjects/${subject.subjectId}`, subject);
+  }
 }

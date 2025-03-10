@@ -8,6 +8,7 @@ import { CourseComponent } from './pages/admin/dashboard/course/course.component
 import { SubjectComponent } from './pages/admin/dashboard/subject/subject.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
+import { SubjectDetailComponent } from './pages/admin/dashboard/subject/subject-detail/subject-detail.component';
 
 const routes: Routes = [
   {
@@ -44,7 +45,7 @@ const routes: Routes = [
           { path: 'course', component: CourseComponent },
           { path: 'course/:courseCode', component: CourseDetailComponent },
           { path: 'subject', component: SubjectComponent },
-          { path: 'subject/:subjectId', component: SubjectComponent },
+          { path: 'subject/:subjectId', component: SubjectDetailComponent },
           { path: 'user', component: SubjectComponent }
         ]
       }

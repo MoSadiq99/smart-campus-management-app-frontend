@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SubjectDto } from 'src/app/models/subject-dto';
 import { SubjectService } from '../../subject/subject.service';
 import { CommonModule } from '@angular/common';
-import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-course-detail',
