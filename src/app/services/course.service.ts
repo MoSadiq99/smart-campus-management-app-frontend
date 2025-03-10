@@ -26,4 +26,12 @@ export class CourseService {
   public updateCourse(course: CourseDto): Observable<any> {
     return this.http.put<CourseDto>(`${environment.apiUrl}/courses/${course.courseId}`, course);
   }
+
+  public getEnrolledStudents(courseId: number): Observable<number[]> {
+    return this.http.get<number[]>(`${environment.apiUrl}/courses/${courseId}/enrolled-students`);
+  }
+
+  public enrollStudents(courseId: number, studentIds: number[]): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/courses/${courseId}/enrolled-students`, studentIds);
+  }
 }
