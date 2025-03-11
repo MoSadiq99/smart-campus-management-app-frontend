@@ -44,6 +44,12 @@ const routes: Routes = [
         loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
       },
       {
+        path: 'resource-calendar',
+
+        loadComponent: () =>
+          import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
+      },
+      {
         path: 'chat',
         loadComponent: () => import('./components/common/chat/group-chat.component').then((m) => m.GroupChatComponent)
       },
@@ -51,18 +57,12 @@ const routes: Routes = [
         path: 'create-group',
         loadComponent: () => import('./components/admin/create-group/create-group.component').then((m) => m.CreateGroupComponent)
       },
+      { path: 'course', component: CourseComponent },
+      { path: 'course/:courseCode', component: CourseDetailComponent },
+      { path: 'subject', component: SubjectComponent },
+      { path: 'subject/:subjectId', component: SubjectDetailComponent },
+      { path: 'user', component: SubjectComponent }
 
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./pages/admin/dashboard/dashboard.component').then((m) => m.DashboardComponent),
-        children: [
-          { path: 'course', component: CourseComponent },
-          { path: 'course/:courseCode', component: CourseDetailComponent },
-          { path: 'subject', component: SubjectComponent },
-          { path: 'subject/:subjectId', component: SubjectDetailComponent },
-          { path: 'user', component: SubjectComponent }
-        ]
-      }
     ]
   },
   {
@@ -114,7 +114,8 @@ const routes: Routes = [
         // loadComponent: () => import('./components/buyer/buyer-dashboard/buyer-dashboard.component').then((m) => m.BuyerDashboardComponent),
       }
     ]
-  }
+  },
+
 ];
 
 @NgModule({

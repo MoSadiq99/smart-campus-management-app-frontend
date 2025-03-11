@@ -293,7 +293,7 @@ export class EventCalendarComponent implements AfterViewInit {
       return;
     }
 
-    const dp = args.control;
+    // const dp = args.control;
 
     const updatedEvent: EventDto = {
       eventId: data.id,

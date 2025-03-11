@@ -16,6 +16,7 @@ interface JwtPayload {
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+
   private currentUserRole: string;
   static readonly RegisterPath = 'http://localhost:8080/api/register';
   static readonly LoginPath = 'http://localhost:8080/api/authenticate';
@@ -24,7 +25,7 @@ export class AuthenticationService {
   constructor(
     private readonly http: HttpClient,
     private readonly tokenService: TokenService,
-    
+
   ) {
 
   }
@@ -92,7 +93,6 @@ export class AuthenticationService {
     }
   }
 
-
   // Added chat group creation logic
   getUsername(): string {
     const token = localStorage.getItem('token');
@@ -102,14 +102,15 @@ export class AuthenticationService {
   getRole(): string {
     const token = localStorage.getItem('token');
     const decodedToken = this.jwtHelper.decodeToken(token);
+    console.log('Decoded token:', decodedToken);
     return decodedToken?.authorities?.[0] || ''; // First authority is the role
   }
 
   isAdmin(): boolean {
-    return this.getRole() === 'ADMIN';
+    return this.getRole() === 'ROLE_ADMIN';
   }
 
   isLecturer(): boolean {
-    return this.getRole() === 'LECTURER';
+    return this.getRole() === 'ROLE_LECTURER';
   }
 }

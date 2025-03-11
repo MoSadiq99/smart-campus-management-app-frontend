@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { environment } from 'src/environments/environment';
 
 export interface NotificationDto {
-  notificationId: number;
+  id: number;
   userId: number;
   message: string;
   type: string;
   sentTime: string;
-  status: string;
   read: boolean;
 }
 
@@ -17,35 +18,82 @@ export interface NotificationDto {
   providedIn: 'root'
 })
 export class NotificationService {
+  private readonly apiUrl = environment.apiUrl;
   private stompClient: Client;
-  private notificationSubject = new Subject<NotificationDto>();
+  private readonly notificationSubject = new Subject<NotificationDto>();
 
-  constructor() {
-    this.connect();
+  constructor(private readonly http: HttpClient) {
+    this.initializeWebSocketConnection();
   }
 
-  private connect(): void {
-    const socket = new SockJS('http://localhost:8080/ws');
-    this.stompClient = new Client({
-      webSocketFactory: () => socket,
-      reconnectDelay: 5000,
-      heartbeatIncoming: 10000,
-      heartbeatOutgoing: 10000,
-    });
+  private initializeWebSocketConnection(): void {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No authentication token found');
+      return;
+    }
 
-    this.stompClient.onConnect = (frame) => {
-      console.log('Connected: ' + frame);
-      const username = localStorage.getItem('username'); // Assume stored during login
-      this.stompClient.subscribe(`/user/${username}/topic/notifications`, (message) => {
-        const notification: NotificationDto = JSON.parse(message.body);
-        this.notificationSubject.next(notification);
+    try {
+      const socket = new SockJS('http://localhost:8080/ws');
+      this.stompClient = new Client({
+        webSocketFactory: () => socket,
+        reconnectDelay: 5000,
+        heartbeatIncoming: 10000,
+        heartbeatOutgoing: 10000,
+        connectHeaders: {
+          Authorization: `Bearer ${token}`
+        }
       });
-    };
 
-    this.stompClient.activate();
+      this.stompClient.onConnect = (frame) => {
+        console.log('Notification WebSocket Connected:', frame);
+        
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+          this.stompClient.subscribe(`/topic/users/${userId}/notifications`, (message) => {
+            try {
+              const notification = JSON.parse(message.body);
+              this.notificationSubject.next(notification);
+            } catch (error) {
+              console.error('Error parsing notification:', error);
+            }
+          });
+        }
+      };
+
+      this.stompClient.onStompError = (frame) => {
+        console.error('Notification WebSocket Error:', frame.headers['message']);
+      };
+
+      this.stompClient.activate();
+    } catch (error) {
+      console.error('Error initializing notification WebSocket connection:', error);
+    }
   }
 
   getNotifications(): Observable<NotificationDto> {
     return this.notificationSubject.asObservable();
+  }
+
+  getAllNotifications(): Observable<NotificationDto[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const userId = localStorage.getItem('userId');
+    
+    return this.http.get<NotificationDto[]>(
+      `${this.apiUrl}/users/${userId}/notifications`, 
+      { headers }
+    );
+  }
+
+  markAsRead(notificationId: number): Observable<void> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.http.put<void>(
+      `${this.apiUrl}/notifications/${notificationId}/read`, 
+      {}, 
+      { headers }
+    );
   }
 }

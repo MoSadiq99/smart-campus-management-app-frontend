@@ -36,7 +36,7 @@ import { NotificationsComponent } from './notifications.component';
           <app-files [files]="files" (uploadFileEvent)="uploadFile($event)"></app-files>
         </mat-tab>
         <mat-tab label="Tasks">
-          <app-tasks [newTask]="newTask" (createTaskEvent)="createTask()"></app-tasks>
+          <app-tasks [newTask]="newTask" [groupId]="groupId" (createTaskEvent)="createTask()"></app-tasks>
         </mat-tab>
         <mat-tab label="Members">
           <app-members [newMemberId]="newMemberId" (addMemberEvent)="addMember()"></app-members>
@@ -46,13 +46,13 @@ import { NotificationsComponent } from './notifications.component';
     <app-notifications [notifications]="notifications"></app-notifications>
   `,
   styleUrls: ['./group-chat.component.scss']
-}) 
+})
 export class GroupChatComponent implements OnInit, OnDestroy {
   groupId: number;
   messages: MessageDto[] = [];
   files: FileDto[] = [];
-  newMessage: MessageCreateDto = { senderId: 1, groupId: 0, content: '' };
-  newTask: TaskCreateDto = { title: '', description: '', assignedToId: 0, dueDate: '' };
+  newMessage: MessageCreateDto = { senderId: 1, groupId: 1, content: '' };
+  newTask: TaskCreateDto = { title: '', description: '', assignedToId: null, assignedToGroupId: 0, dueDate: '' };
   newMemberId: number = 0;
   notifications: NotificationDto[] = [];
   private messageSubscription: Subscription;
@@ -66,6 +66,7 @@ export class GroupChatComponent implements OnInit, OnDestroy {
   ) {
     this.groupId = +this.route.snapshot.paramMap.get('id')!;
     this.newMessage.groupId = this.groupId;
+    this.newTask.assignedToGroupId = this.groupId; // Set groupId by default
   }
 
   ngOnInit(): void {
@@ -80,34 +81,20 @@ export class GroupChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.messageSubscription) this.messageSubscription.unsubscribe();
-    if (this.notificationSubscription) this.notificationSubscription.unsubscribe();
+    this.messageSubscription?.unsubscribe();
+    this.notificationSubscription?.unsubscribe();
   }
 
-  // loadGroupData(): void {
-  //   this.groupService.getAllGroups().subscribe(groups => {
-  //     const group = groups.find(g => g.groupId === this.groupId);
-  //     if (group) {
-  //       this.messages = group.messages;
-  //       this.files = group.files || [];
-  //     }
-  //   });
-  // }
-
   loadGroupData(): void {
-    this.groupService.getAllGroups().subscribe(groups => {
-      const group = groups.find(g => g.groupId === this.groupId);
-      if (group) {
-        this.messages = group.messages;
-        this.groupService.getGroupFiles(this.groupId).subscribe(files => {
-          this.files = files || [];
-        });
-      }
+    this.groupService.getGroupById(this.groupId).subscribe(group => {
+      this.messages = group.messages || [];
+      this.files = group.files || [];
     });
   }
 
   sendMessage(): void {
     if (this.newMessage.content.trim()) {
+      this.newMessage.groupId = 1; // Set groupId for now
       this.groupService.sendMessage(this.newMessage).subscribe({
         next: (message) => {
           this.messages.push(message);
@@ -131,10 +118,10 @@ export class GroupChatComponent implements OnInit, OnDestroy {
   }
 
   createTask(): void {
-    if (this.newTask.title.trim() && this.newTask.assignedToId > 0) {
+    if (this.newTask.title.trim()) {
       this.groupService.createGroupTask(this.groupId, this.newTask).subscribe({
         next: () => {
-          this.newTask = { title: '', description: '', assignedToId: 0, dueDate: '' };
+          this.newTask = { title: '', description: '', assignedToId: null, assignedToGroupId: this.groupId, dueDate: '' };
           this.snackBar.open('Task created successfully', 'Close', { duration: 2000 });
         },
         error: (err) => console.error('Error creating task:', err)
@@ -144,14 +131,19 @@ export class GroupChatComponent implements OnInit, OnDestroy {
 
   uploadFile(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
+    if (input.files?.length) {
       const file = input.files[0];
+      this.groupId = 1; 
       this.groupService.uploadGroupFile(this.groupId, file).subscribe({
         next: (fileDto) => {
           this.files.push(fileDto);
           this.snackBar.open('File uploaded successfully', 'Close', { duration: 2000 });
+          input.value = ''; // Reset input
         },
-        error: (err) => console.error('Error uploading file:', err)
+        error: (err) => {
+          console.error('Error uploading file:', err);
+          this.snackBar.open('Failed to upload file', 'Close', { duration: 5000 });
+        }
       });
     }
   }
