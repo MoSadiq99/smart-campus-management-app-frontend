@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CourseDto } from 'src/app/models/course-dto';
-import { CourseService } from '../../course/course.service';
+import { CourseService } from 'src/app/services/course.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SubjectDto } from 'src/app/models/subject-dto';
-import { SubjectService } from '../subject.service';
+import { SubjectService } from 'src/app/services/subject.service';
 import { CommonModule } from '@angular/common';
 import { NgSelectComponent } from '@ng-select/ng-select';
 

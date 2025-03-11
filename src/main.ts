@@ -3,13 +3,14 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { environment } from './environments/environment';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-// import { AppModule } from './app/app.module';
+
 import { AppRoutingModule } from './app/app-routing.module';
 import { AppComponent } from './app/app.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CalendarDateFormatter, CalendarEventTitleFormatter, CalendarMomentDateFormatter, DateAdapter, MOMENT } from 'angular-calendar';
 import moment from 'moment';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment'; // Import adapterFactory
+
 import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -28,9 +29,6 @@ import { httpTokenInterceptor } from './app/services/interceptors/http-token.int
 if (environment.production) {
   enableProdMode();
 }
-
-// platformBrowserDynamic().bootstrapModule(AppModule)
-//   .catch(err => console.error(err));
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -53,15 +51,15 @@ bootstrapApplication(AppComponent, {
     // Angular Calendar and Datepilot providers
     {
       provide: DateAdapter,
-      useFactory: () => adapterFactory(moment),
+      useFactory: () => adapterFactory(moment)
     },
     {
       provide: MOMENT,
-      useValue: moment,
+      useValue: moment
     },
     {
       provide: CalendarDateFormatter,
-      useClass: CalendarMomentDateFormatter,
+      useClass: CalendarMomentDateFormatter
     },
     {
       provide: CalendarEventTitleFormatter,

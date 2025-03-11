@@ -4,7 +4,7 @@ import { PopupModalComponent } from 'src/app/components/common/popup-modal/popup
 import { SubjectCreateForm } from 'src/app/models/input-forms';
 import { Router } from '@angular/router';
 import { SubjectDto } from 'src/app/models/subject-dto';
-import { SubjectService } from './subject.service';
+import { SubjectService } from 'src/app/services/subject.service';
 
 @Component({
   selector: 'app-subject',

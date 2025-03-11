@@ -1,0 +1,46 @@
+<div class="container">
+  <!-- Course Selection -->
+  <div>
+    <h3>Select a Course</h3>
+    <div class="form-group">
+      <select class="form-control" [(ngModel)]="selectedCourseId" (change)="onCourseSelect(selectedCourseId)">
+        <option *ngFor="let course of courses" [value]="course.courseId">{{ course.courseName }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Student Selection (Appears only when a course is selected) -->
+  <div *ngIf="selectedCourseId" class="mt-4">
+    <h3>Select Students</h3>
+
+    <div class="row">
+      <!-- Available Students -->
+      <div class="col-md-5">
+        <h5>Available Students</h5>
+        <select multiple class="form-control available-students" size="10">
+          <option *ngFor="let student of availableStudents" (click)="selectStudent(student)">
+            {{ getFullName(student) }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Transfer Buttons -->
+      <div class="col-md-2 text-center align-self-center">
+        <button class="btn btn-primary btn-sm mb-2" (click)="moveToSelected()">→</button>
+        <button class="btn btn-secondary btn-sm" (click)="moveToAvailable()">←</button>
+      </div>
+
+      <!-- Selected Students -->
+      <div class="col-md-5">
+        <h5>Selected Students</h5>
+        <select multiple class="form-control selected-students" size="10">
+          <option *ngFor="let student of selectedStudentList" (click)="removeStudent(student)">
+            {{ getFullName(student) }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-success mt-3" (click)="submitEnrollment()">Enroll Students</button>
+  </div>
+</div>
