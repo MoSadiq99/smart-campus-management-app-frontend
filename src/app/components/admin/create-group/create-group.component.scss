@@ -1,0 +1,54 @@
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+
+  .card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .card-body {
+    padding: 2rem;
+
+    .form-label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      font-size: 1rem;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken(#007bff, 10%);
+      }
+
+      &:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+    }
+
+    .text-danger {
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+  }
+}

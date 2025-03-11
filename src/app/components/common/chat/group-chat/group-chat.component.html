@@ -1,0 +1,79 @@
+<mat-card class="chat-container">
+  <mat-tab-group>
+    <!-- Chat Tab -->
+    <mat-tab label="Chat">
+      <mat-list class="message-list">
+        <mat-list-item *ngFor="let message of messages">
+          <span matListItemTitle>User {{ message.senderId }}:</span>
+          <span matListItemLine>{{ message.content }} ({{ message.sentTime | date:'short' }})</span>
+        </mat-list-item>
+      </mat-list>
+      <mat-divider></mat-divider>
+      <form (ngSubmit)="sendMessage()" class="message-form">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Type a message</mat-label>
+          <input matInput [(ngModel)]="newMessage.content" name="content" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Send</button>
+      </form>
+    </mat-tab>
+
+    <!-- Files Tab -->
+    <mat-tab label="Files">
+      <mat-list>
+        <mat-list-item *ngFor="let file of files">
+          <span matListItemTitle>{{ file.fileName }}</span>
+          <span matListItemLine>Uploaded: {{ file.uploadTime | date:'short' }}</span>
+          <!-- <button mat-icon-button (click)="downloadFile(file.filePath)">
+            <mat-icon>download</mat-icon>
+          </button> -->
+        </mat-list-item>
+      </mat-list>
+      <input type="file" (change)="uploadFile($event)" style="margin-top: 10px;">
+    </mat-tab>
+
+    <!-- Tasks Tab -->
+    <mat-tab label="Tasks">
+      <form (ngSubmit)="createTask()" class="task-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="newTask.title" name="title" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <input matInput [(ngModel)]="newTask.description" name="description">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Assign To (User ID)</mat-label>
+          <input matInput type="number" [(ngModel)]="newTask.assignedToId" name="assignedToId" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Due Date</mat-label>
+          <input matInput type="date" [(ngModel)]="newTask.dueDate" name="dueDate" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Create Task</button>
+      </form>
+    </mat-tab>
+
+    <!-- Members Tab -->
+    <mat-tab label="Members">
+      <form (ngSubmit)="addMember()" class="member-form">
+        <mat-form-field appearance="fill">
+          <mat-label>User ID</mat-label>
+          <input matInput type="number" [(ngModel)]="newMemberId" name="newMemberId" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Add Member</button>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>
+
+<!-- Notifications -->
+<div class="notification-container">
+  <mat-list>
+    <mat-list-item *ngFor="let notification of notifications">
+      <span matListItemTitle>{{ notification.message }}</span>
+      <span matListItemLine>{{ notification.sentTime | date:'short' }}</span>
+    </mat-list-item>
+  </mat-list>
+</div>

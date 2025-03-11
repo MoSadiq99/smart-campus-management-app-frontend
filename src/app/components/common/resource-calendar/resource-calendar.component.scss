@@ -1,0 +1,59 @@
+.container-fluid {
+  padding: 1rem;
+}
+
+.row {
+  margin: 0 -15px; // Match Bootstrap's negative margins
+}
+
+.col-md-3, .col-md-9 {
+  padding: 15px;
+}
+
+.card {
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 0.25rem;
+}
+
+.calendar-container {
+  min-height: 600px; // Ensure adequate height
+  width: 100%;
+}
+
+// Override DayPilot default styles
+:host ::ng-deep {
+  .calendar_default_main,
+  .month_default_main {
+    width: 100% !important;
+    min-height: 500px !important;
+    border: 1px solid #ddd;
+  }
+
+  .month_default_event_inner {
+    white-space: normal; // Prevent text cutoff in month view
+  }
+}
+
+.btn-group {
+  .btn {
+    min-width: 80px;
+    transition: all 0.2s ease;
+
+    &.btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      &:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+      }
+    }
+
+    &.btn-outline-primary {
+      color: #007bff;
+      border-color: #007bff;
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+}
