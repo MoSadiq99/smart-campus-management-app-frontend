@@ -62,6 +62,10 @@ const routes: Routes = [
           { path: 'subject/:subjectId', component: SubjectDetailComponent },
           { path: 'user', component: SubjectComponent }
         ]
+      },
+      {
+        path: 'enrollment',
+        loadComponent: () => import('./pages/admin/dashboard/enrollment/enrollment.component').then((m) => m.EnrollmentComponent)
       }
     ]
   },

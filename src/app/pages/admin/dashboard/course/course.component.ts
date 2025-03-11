@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CourseDto } from '../../../../models/course-dto'; // Assuming you have a model for Course
 import { CommonModule } from '@angular/common';
-import { CourseService } from './course.service';
+import { CourseService } from 'src/app/services/course.service';
 import { PopupModalComponent } from 'src/app/components/common/popup-modal/popup-modal.component';
 import { CourseCreateForm } from 'src/app/models/input-forms';
 import { Router } from '@angular/router';
