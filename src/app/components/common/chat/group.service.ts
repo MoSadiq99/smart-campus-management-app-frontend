@@ -119,8 +119,8 @@ export class GroupService {
   private readonly apiUrl = environment.apiUrl;
   private stompClient: Client;
   private readonly messageSubject = new Subject<MessageDto>();
-  private connected = new BehaviorSubject<boolean>(false);
-  private userCache = new Map<number, UserDto>();
+  private readonly connected = new BehaviorSubject<boolean>(false);
+  private readonly userCache = new Map<number, UserDto>();
 
   constructor(
     private readonly http: HttpClient,
@@ -143,7 +143,8 @@ export class GroupService {
       reconnectDelay: 5000,
       heartbeatIncoming: 10000,
       heartbeatOutgoing: 10000,
-      connectHeaders: { Authorization: `Bearer ${token}` }
+      connectHeaders: { Authorization: `Bearer ${token}` },
+      debug: (str) => console.log('STOMP Debug:', str) // Add debug logging
     });
 
     this.stompClient.onConnect = (frame) => {
@@ -242,6 +243,9 @@ export class GroupService {
   getGroupMessages(groupId: number): Observable<MessageDto> {
     this.connected.subscribe(isConnected => {
       if (isConnected && this.stompClient.connected) {
+        console.log('Subscribing to messages...');
+        const tempGroupId = 1;
+        groupId = tempGroupId;
         console.log(`Subscribing to messages for group ${groupId}`);
         this.stompClient.subscribe(`/topic/groups/${groupId}/messages`, (message) => {
           try {
@@ -290,7 +294,7 @@ export class GroupService {
   deleteTask(taskId: number): Observable<void> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.delete<void>(`${this.apiUrl}/tasks/${taskId}`, { headers }).pipe(
+    return this.http.delete<void>(`${this.apiUrl}/groups/tasks/${taskId}`, { headers }).pipe(
       catchError(error => {
         console.error(`Error deleting task ${taskId}:`, error);
         throw error;
