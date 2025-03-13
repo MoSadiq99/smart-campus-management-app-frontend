@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ResourceService, ResourceDto, ResourceCreateDto } from './resource.service';
+import { ResourceService } from './resource.service';
+import { ResourceDto } from 'src/app/models/dto/ResourceDto';
+import { ResourceCreateDto } from 'src/app/models/dto/ResourceCreateDto';
 
 @Component({
   selector: 'app-resource',
@@ -16,7 +18,13 @@ export class ResourceComponent implements OnInit {
   resources: ResourceDto[] = [];
   filteredResources: ResourceDto[] = [];
   newResource: ResourceCreateDto = { resourceName: '', type: '', availabilityStatus: 'AVAILABLE', location: '', capacity: 0 };
-  selectedResource: ResourceCreateDto & { id?: number } = { resourceName: '', type: '', availabilityStatus: 'AVAILABLE', location: '', capacity: 0 }; // For editing
+  selectedResource: ResourceCreateDto & { id?: number } = {
+    resourceName: '',
+    type: '',
+    availabilityStatus: 'AVAILABLE',
+    location: '',
+    capacity: 0
+  }; // For editing
   selectedResourceType: string = 'All';
   resourceTypes: string[] = ['Classroom', 'Lab', 'Equipment', 'Hall', 'Other'];
 
@@ -40,17 +48,16 @@ export class ResourceComponent implements OnInit {
   }
 
   filterResources(): void {
-    this.filteredResources = this.selectedResourceType === 'All'
-      ? [...this.resources]
-      : this.resources.filter(r => r.type === this.selectedResourceType);
+    this.filteredResources =
+      this.selectedResourceType === 'All' ? [...this.resources] : this.resources.filter((r) => r.type === this.selectedResourceType);
   }
 
   getAvailableResources(): ResourceDto[] {
-    return this.resources.filter(r => r.availabilityStatus === 'AVAILABLE');
+    return this.resources.filter((r) => r.availabilityStatus === 'AVAILABLE');
   }
 
   getInUseResources(): ResourceDto[] {
-    return this.resources.filter(r => r.availabilityStatus === 'IN_USE');
+    return this.resources.filter((r) => r.availabilityStatus === 'IN_USE');
   }
 
   openCreateModal(content: any): void {
@@ -59,7 +66,13 @@ export class ResourceComponent implements OnInit {
   }
 
   createResource(): void {
-    if (this.newResource.resourceName && this.newResource.type && this.newResource.availabilityStatus && this.newResource.location && this.newResource.capacity) {
+    if (
+      this.newResource.resourceName &&
+      this.newResource.type &&
+      this.newResource.availabilityStatus &&
+      this.newResource.location &&
+      this.newResource.capacity
+    ) {
       console.log('Sending resource:', this.newResource);
       this.resourceService.createResource(this.newResource).subscribe({
         next: (resource) => {
@@ -79,10 +92,15 @@ export class ResourceComponent implements OnInit {
   }
 
   updateResource(): void {
-    if (this.selectedResource.id && this.selectedResource.resourceName && this.selectedResource.type && this.selectedResource.availabilityStatus) {
+    if (
+      this.selectedResource.id &&
+      this.selectedResource.resourceName &&
+      this.selectedResource.type &&
+      this.selectedResource.availabilityStatus
+    ) {
       this.resourceService.updateResource(this.selectedResource.id, this.selectedResource).subscribe({
         next: (updatedResource) => {
-          const index = this.resources.findIndex(r => r.id === updatedResource.id);
+          const index = this.resources.findIndex((r) => r.resourceId === updatedResource.resourceId);
           if (index !== -1) {
             this.resources[index] = updatedResource;
             this.filteredResources = [...this.resources];
@@ -96,11 +114,11 @@ export class ResourceComponent implements OnInit {
 
   deleteResource(resource: ResourceDto): void {
     console.log('deleteResource');
-    if (resource.id) {
-      console.log('Deleting resource with ID:', resource.id);
-      this.resourceService.deleteResource(resource.id).subscribe({
+    if (resource.resourceId) {
+      console.log('Deleting resource with ID:', resource.resourceId);
+      this.resourceService.deleteResource(resource.resourceId).subscribe({
         next: () => {
-          this.resources = this.resources.filter(r => r.id !== resource.id);
+          this.resources = this.resources.filter((r) => r.resourceId !== resource.resourceId);
           this.filteredResources = [...this.resources];
         },
         error: (err) => console.error('Failed to delete resource:', err)
