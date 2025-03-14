@@ -52,6 +52,6 @@ export class CourseComponent implements OnInit {
 
   goToCourse(courseCode: string) {
     console.log('Navigating to course:', courseCode);
-    this.router.navigate(['/admin/dashboard/course', courseCode]);
+    this.router.navigate(['/admin/course', courseCode]);
   }
 }
