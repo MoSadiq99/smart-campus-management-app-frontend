@@ -49,6 +49,6 @@ export class SubjectComponent implements OnInit {
   }
 
   goToSubject(subjectId: number) {
-    this.router.navigate(['/admin/dashboard/subject', subjectId]);
+    this.router.navigate(['/admin/subject', subjectId]);
   }
 }

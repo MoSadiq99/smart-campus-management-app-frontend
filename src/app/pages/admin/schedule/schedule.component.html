@@ -1,0 +1,54 @@
+<div class="container-fluid p-3">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-2">
+      <div class="card shadow-sm p-3">
+        <daypilot-navigator
+          [config]="configNavigator"
+          [events]="lectureEvents"
+          [(date)]="date"
+          (dateChange)="changeDate($event)"
+          #navigator
+        ></daypilot-navigator>
+      </div>
+    </div>
+    <!-- Main Content -->
+    <div class="col-md-9">
+      <div class="card shadow-sm p-3">
+        <div class="btn-group mb-3" role="group">
+          <button
+            type="button"
+            (click)="viewDay()"
+            [ngClass]="{ 'btn-primary': activeView === 'day', 'btn-outline-primary': activeView !== 'day' }"
+            class="btn"
+          >
+            Day
+          </button>
+          <button
+            type="button"
+            (click)="viewWeek()"
+            [ngClass]="{ 'btn-primary': activeView === 'week', 'btn-outline-primary': activeView !== 'week' }"
+            class="btn"
+          >
+            Week
+          </button>
+          <button
+            type="button"
+            (click)="viewMonth()"
+            [ngClass]="{ 'btn-primary': activeView === 'month', 'btn-outline-primary': activeView !== 'month' }"
+            class="btn"
+          >
+            Month
+          </button>
+        </div>
+
+        <!-- Calendar Container -->
+        <div class="calendar-container">
+          <daypilot-calendar *ngIf="activeView === 'day'" [config]="configDay" [events]="lectureEvents" #day></daypilot-calendar>
+          <daypilot-calendar *ngIf="activeView === 'week'" [config]="configWeek" [events]="lectureEvents" #week></daypilot-calendar>
+          <daypilot-month *ngIf="activeView === 'month'" [config]="configMonth" [events]="lectureEvents" #month></daypilot-month>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
