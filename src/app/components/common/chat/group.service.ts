@@ -106,6 +106,8 @@ interface Course {
   name: string;
 }
 
+
+
 interface User {
   id: number;
   username: string;
@@ -184,7 +186,7 @@ export class GroupService {
   }
 
   getUsersByCourse(courseId: number): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/courses/${courseId}/users`, { headers: this.getHeaders() }).pipe(
+    return this.http.get<User[]>(`${this.apiUrl}/courses/{courseId}/enrolled-students`, { headers: this.getHeaders() }).pipe(
       catchError(error => {
         console.error(`Error fetching users for course ${courseId}:`, error);
         return of([]);

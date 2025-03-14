@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { CourseCreateDto, CourseDto } from 'src/app/models/course-dto';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -29,6 +30,10 @@ export class CourseService {
 
   public getEnrolledStudents(courseId: number): Observable<number[]> {
     return this.http.get<number[]>(`${environment.apiUrl}/courses/${courseId}/enrolled-students`);
+  }
+
+  public getEnrolledStudentsList(courseId: number): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/courses/${courseId}/enrolled-students-list`);
   }
 
   public enrollStudents(courseId: number, studentIds: number[]): Observable<any> {

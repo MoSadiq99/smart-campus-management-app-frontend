@@ -10,6 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
 import { SubjectDetailComponent } from './pages/admin/dashboard/subject/subject-detail/subject-detail.component';
 import { authGuard } from './services/guard/auth.guard';
+import { EnrollmentComponent } from './pages/admin/dashboard/enrollment/enrollment.component';
 
 const routes: Routes = [
   {
@@ -64,7 +65,8 @@ const routes: Routes = [
       { path: 'course/:courseCode', component: CourseDetailComponent },
       { path: 'subject', component: SubjectComponent },
       { path: 'subject/:subjectId', component: SubjectDetailComponent },
-      { path: 'user', component: SubjectComponent }
+      { path: 'user', component: SubjectComponent },
+      { path: 'enrollment', component: EnrollmentComponent }
 
     ]
   },

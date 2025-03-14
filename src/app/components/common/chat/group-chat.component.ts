@@ -60,7 +60,7 @@ export class GroupChatComponent implements OnInit, OnDestroy {
   private notificationSubscription: Subscription;
 
   constructor(
-    private groupService: GroupService,
+    private readonly groupService: GroupService,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
     private readonly authService: AuthenticationService,

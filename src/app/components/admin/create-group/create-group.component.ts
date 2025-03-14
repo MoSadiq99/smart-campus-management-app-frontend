@@ -9,17 +9,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { CourseService } from 'src/app/services/course.service';
+import { CourseDto } from 'src/app/models/course-dto';
+import { StudentDto } from 'src/app/models/student-dto';
 
-interface Course {
-  id: number;
-  name: string;
-}
+// interface Course {
+//   id: number;
+//   name: string;
+// }
 
-interface User {
-  id: number;
-  username: string;
-  email: string;
-}
+// interface User {
+//   id: number;
+//   username: string;
+//   email: string;
+// }
 
 @Component({
   selector: 'app-create-group',
@@ -64,8 +67,8 @@ interface User {
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Select Course</mat-label>
               <mat-select formControlName="courseId" (selectionChange)="onCourseChange($event.value)" required>
-                <mat-option *ngFor="let course of courses" [value]="course.id">
-                  {{ course.name }}
+                <mat-option *ngFor="let course of courses" [value]="course.courseId">
+                  {{ course.courseName }}
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="groupForm.get('courseId')?.hasError('required')">
@@ -77,8 +80,8 @@ interface User {
             <mat-form-field appearance="fill" class="full-width">
               <mat-label>Initial Members (Optional)</mat-label>
               <mat-select formControlName="initialMemberIds" multiple>
-                <mat-option *ngFor="let user of users" [value]="user.id">
-                  {{ user.username }} ({{ user.email }})
+                <mat-option *ngFor="let student of students" [value]="student.userId">
+                  {{ student.firstName }} {{ student.lastName }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -127,14 +130,15 @@ interface User {
 })
 export class CreateGroupComponent implements OnInit {
   groupForm: FormGroup;
-  courses: Course[] = [];
-  users: User[] = [];
+  courses: CourseDto[] = [];
+  students: StudentDto[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private groupService: GroupService,
-    private authService: AuthenticationService,
-    private snackBar: MatSnackBar
+    private readonly groupService: GroupService,
+    private readonly authService: AuthenticationService,
+    private readonly courseService: CourseService,
+    private readonly snackBar: MatSnackBar
   ) {
     this.groupForm = this.fb.group({
       groupName: ['', [Validators.required, Validators.minLength(3)]],
@@ -153,7 +157,7 @@ export class CreateGroupComponent implements OnInit {
     }
 
     // Fetch courses
-    this.groupService.getCourses().subscribe({
+    this.courseService.getCourses().subscribe({
       next: (courses) => this.courses = courses,
       error: () => this.snackBar.open('Failed to load courses', 'Close', { duration: 3000 })
     });
@@ -161,13 +165,13 @@ export class CreateGroupComponent implements OnInit {
 
   onCourseChange(courseId: number): void {
     // Fetch users enrolled in the selected course
-    this.groupService.getUsersByCourse(courseId).subscribe({
-      next: (users) => {
-        this.users = users;
-        const currentUserId = this.authService.getCurrentUserId();
-        if (currentUserId && !this.users.some(u => u.id === currentUserId)) {
-          this.users.push({ id: currentUserId, username: 'You', email: '' }); // Ensure current user is included
-        }
+    this.courseService.getEnrolledStudentsList(courseId).subscribe({
+      next: (students) => {
+        this.students = students;
+        // const currentUserId = this.authService.getCurrentUserId();
+        // if (currentUserId && !this.students.some(u => u.userId === currentUserId)) {
+        //   this.students.push({ userId: currentUserId, firstName: 'You'}); // Ensure current user is included
+        // }
       },
       error: () => this.snackBar.open('Failed to load users for this course', 'Close', { duration: 3000 })
     });
@@ -183,7 +187,7 @@ export class CreateGroupComponent implements OnInit {
         next: () => {
           this.snackBar.open('Group created successfully!', 'Close', { duration: 3000 });
           this.groupForm.reset();
-          this.users = []; // Reset users list
+          this.students = []; // Reset student list
         },
         error: (err) => {
           this.snackBar.open('Error creating group: ' + (err.message || 'Unknown error'), 'Close', { duration: 3000 });
