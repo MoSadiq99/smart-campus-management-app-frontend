@@ -9,8 +9,11 @@ import { SubjectComponent } from './pages/admin/dashboard/subject/subject.compon
 import { BrowserModule } from '@angular/platform-browser';
 import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
 import { SubjectDetailComponent } from './pages/admin/dashboard/subject/subject-detail/subject-detail.component';
+
 import { EnrollmentComponent } from './pages/admin/dashboard/enrollment/enrollment.component';
 import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
+
+import { authGuard } from './services/guard/auth.guard';
 
 const routes: Routes = [
   {
@@ -33,7 +36,8 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => import('./components/admin/dashboard/admin-dash/admin-dash.component').then((m) => m.AdminDashComponent)
+        loadComponent: () => import('./components/admin/dashboard/admin-dash/admin-dash.component').then((m) => m.AdminDashComponent),
+        canActivate: [authGuard] //! This is the guard- It will check if JWT token is valid or not (if not, it will redirect to login page)
       },
 
       {
@@ -53,7 +57,8 @@ const routes: Routes = [
       },
       {
         path: 'chat',
-        loadComponent: () => import('./components/common/chat/group-chat.component').then((m) => m.GroupChatComponent)
+        loadComponent: () => import('./components/common/chat/group-chat.component').then((m) => m.GroupChatComponent),
+        canActivate: [authGuard]
       },
       {
         path: 'create-group',

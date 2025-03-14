@@ -8,16 +8,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MessageCreateDto, MessageDto } from './group.service';
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    MatListModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
+    CommonModule,
+    FormsModule,
+    MatListModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule
@@ -26,11 +27,11 @@ import { MessageCreateDto, MessageDto } from './group.service';
     <div class="chat-wrapper">
       <div class="message-list" #messageContainer>
         <mat-list>
-          <div *ngFor="let message of messages" class="message-item" 
+          <div *ngFor="let message of messages" class="message-item"
               [ngClass]="{'own-message': message.senderId === currentUserId}">
             <mat-list-item>
               <span matListItemTitle>
-                <strong>{{ message.senderName || 'User ' + message.senderId }}</strong>
+                <strong>{{ message.senderName }}</strong>
                 <span class="message-time">{{ message.sentTime | date:'short' }}</span>
               </span>
               <span matListItemLine class="message-content">{{ message.content }}</span>
@@ -38,20 +39,20 @@ import { MessageCreateDto, MessageDto } from './group.service';
           </div>
         </mat-list>
       </div>
-      
+
       <mat-divider></mat-divider>
-      
+
       <form (ngSubmit)="sendMessage()" class="message-form">
         <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Type a message</mat-label>
-          <input matInput [(ngModel)]="newMessage.content" name="content" required 
+          <mat-label>Type here..</mat-label>
+          <input matInput [(ngModel)]="newMessage.content" name="content" required
                  placeholder="What's on your mind?" #messageInput>
           <button mat-icon-button matSuffix type="button" matTooltip="Add file"
                   (click)="onAttachmentClick()">
             <mat-icon>attach_file</mat-icon>
           </button>
         </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" 
+        <button mat-raised-button color="primary" type="submit"
                 [disabled]="!newMessage.content.trim()">
           <mat-icon>send</mat-icon>
         </button>
@@ -65,44 +66,44 @@ import { MessageCreateDto, MessageDto } from './group.service';
       height: 100%;
       padding: 16px;
     }
-    
+
     .message-list {
       flex: 1;
       overflow-y: auto;
       max-height: 400px;
       margin-bottom: 16px;
     }
-    
+
     .message-item {
       margin-bottom: 8px;
       border-radius: 8px;
       background-color: #f5f5f5;
       padding: 4px;
     }
-    
+
     .own-message {
       background-color: #e3f2fd;
       margin-left: 20%;
     }
-    
+
     .message-content {
       white-space: pre-wrap;
       word-break: break-word;
     }
-    
+
     .message-time {
       font-size: 12px;
       color: #757575;
       margin-left: 8px;
     }
-    
+
     .message-form {
       display: flex;
       gap: 16px;
       align-items: center;
       padding-top: 8px;
     }
-    
+
     .full-width {
       flex: 1;
     }
@@ -113,23 +114,25 @@ export class ChatComponent implements OnInit {
   @Input() newMessage: MessageCreateDto = { senderId: 0, groupId: 0, content: '' };
   @Output() sendMessageEvent = new EventEmitter<void>();
   @Output() attachFileEvent = new EventEmitter<void>();
-  
+
   currentUserId: number = 0;
-  
-  constructor() {}
-  
+
+  constructor(private readonly authService: AuthenticationService) {}
+
   ngOnInit(): void {
-    // Get current user ID from localStorage
-    const userId = localStorage.getItem('userId');
-    this.currentUserId = userId ? parseInt(userId, 10) : 0;
+    const userId = this.authService.getCurrentUserId();
+    this.currentUserId = userId;
   }
-  
+
+
   sendMessage(): void {
+    console.log('Sending message:', this.newMessage);
+
     if (this.newMessage.content.trim()) {
       this.sendMessageEvent.emit();
     }
   }
-  
+
   onAttachmentClick(): void {
     this.attachFileEvent.emit();
   }

@@ -1,0 +1,62 @@
+.auth-wrapper {
+  background: url('/assets/images/login.jpg');
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+  
+.card {
+  background: linear-gradient(135deg, #220f20, #d1b309);
+  padding: 4px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 15px (#FF7800);
+
+  .card-body {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: inset 0 0 10px (#b25300);
+  }
+}
+
+.input-group input {
+  height: 45px;
+  border-radius: 30px;
+  border: 2px solid #ff0055;
+  padding-left: 15px;
+  background: #fff;
+  color: #000000;
+}
+  
+  .btn-gradient {
+    background: linear-gradient(135deg, #FFC107, #FF7800);
+    color: #fff;
+    font-weight: bold;
+    padding: 12px;
+    border: none;
+    transition: 0.3s;
+  }
+  
+  .btn-gradient:hover {
+    background: linear-gradient(135deg, #FF7800, #FFC107);
+  }
+  
+  .text-danger {
+    color: #ff4d4d !important;
+  }
+  
+  .text-success {
+    color: #28a745 !important;
+  }
+  
+  .text-muted a {
+    transition: 0.3s;
+  }
+  
+  .text-muted a:hover {
+    text-decoration: underline;
+  }
+  

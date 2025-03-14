@@ -85,7 +85,9 @@ export class AuthenticationService {
     }
     try {
       const decoded = this.jwtHelper.decodeToken<JwtPayload>(token);
-      console.log('Decoded token:', decoded);
+
+      console.log('Decoded token:', decoded); // Debugging
+      console.log('Decoded token:', decoded.id); // Debugging
       return decoded.id || 0;
     } catch (error) {
       console.error('Failed to decode token:', error);
@@ -102,7 +104,7 @@ export class AuthenticationService {
   getRole(): string {
     const token = localStorage.getItem('token');
     const decodedToken = this.jwtHelper.decodeToken(token);
-    console.log('Decoded token:', decodedToken);
+    // console.log('Decoded token:', decodedToken);
     return decodedToken?.authorities?.[0] || ''; // First authority is the role
   }
 
