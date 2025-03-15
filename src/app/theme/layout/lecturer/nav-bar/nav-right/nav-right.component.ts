@@ -15,12 +15,15 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
   providers: [NgbDropdownConfig]
 })
 export class NavRightComponent {
-  // public props
 
-  // constructor
   constructor() {
     const config = inject(NgbDropdownConfig);
 
     config.placement = 'bottom-right';
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    window.location.reload();
   }
 }

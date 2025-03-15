@@ -22,10 +22,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { httpTokenInterceptor } from './app/services/interceptors/http-token.interceptor';
 
-// WebSocket configuration from SockJS and STOMP
-
-// import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
 if (environment.production) {
   enableProdMode();
 }
@@ -66,10 +62,5 @@ bootstrapApplication(AppComponent, {
       useClass: CalendarEventTitleFormatter, // Default event title formatter
     },
 
-    // Optional: If you want native JS Date formatting instead of Moment
-    // {
-    //   provide: CalendarDateFormatter,
-    //   useClass: CalendarNativeDateFormatter,
-    // },
   ]
 }).catch((err) => console.error(err));

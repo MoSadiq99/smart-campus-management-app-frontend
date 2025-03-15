@@ -12,6 +12,7 @@ import { FilesComponent } from './files.component';
 import { TasksComponent } from './tasks.component';
 import { MembersComponent } from './members.component';
 import { NotificationsComponent } from './notifications.component';
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 
 @Component({
   selector: 'app-group-chat',
@@ -62,6 +63,7 @@ export class GroupChatComponent implements OnInit, OnDestroy {
     private groupService: GroupService,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
+    private readonly authService: AuthenticationService,
     private snackBar: MatSnackBar
   ) {
     this.groupId = +this.route.snapshot.paramMap.get('id')!;
@@ -95,8 +97,10 @@ export class GroupChatComponent implements OnInit, OnDestroy {
   sendMessage(): void {
     if (this.newMessage.content.trim()) {
       this.newMessage.groupId = 1; // Set groupId for now
+      this.newMessage.senderId = this.authService.getCurrentUserId();
       this.groupService.sendMessage(this.newMessage).subscribe({
         next: (message) => {
+          console.log('Message received:', message);
           this.messages.push(message);
           this.newMessage.content = '';
         },
@@ -133,7 +137,7 @@ export class GroupChatComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       const file = input.files[0];
-      this.groupId = 1; 
+      this.groupId = 1;
       this.groupService.uploadGroupFile(this.groupId, file).subscribe({
         next: (fileDto) => {
           this.files.push(fileDto);
