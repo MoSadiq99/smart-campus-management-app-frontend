@@ -95,11 +95,11 @@ const routes: Routes = [
           import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
       },
 
-      {
-        path: 'schedule-calendar',
-        loadComponent: () =>
-          import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
-      },
+      // {
+      //   path: 'schedule-calendar',
+      //   loadComponent: () =>
+      //     import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
+      // },
       {
         path: 'schedule',
         loadComponent: () => import('./pages/admin/schedule/schedule.component').then((m) => m.ScheduleComponent)

@@ -1,7 +1,13 @@
 // resource-calendar.component.ts (optimized version)
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { DayPilot, DayPilotCalendarComponent, DayPilotModule, DayPilotMonthComponent, DayPilotNavigatorComponent } from '@daypilot/daypilot-lite-angular';
+import {
+  DayPilot,
+  DayPilotCalendarComponent,
+  DayPilotModule,
+  DayPilotMonthComponent,
+  DayPilotNavigatorComponent
+} from '@daypilot/daypilot-lite-angular';
 import { forkJoin } from 'rxjs';
 import { ResourceService } from './resource.service';
 import { CommonModule } from '@angular/common';
@@ -24,7 +30,7 @@ interface AreaData {
 
 interface RecurrencePattern {
   frequency: 'Daily' | 'Weekly' | 'Monthly';
-  interval: number;
+  recurrenceInterval: number;
   endDate?: string;
   daysOfWeek?: number[];
 }
@@ -50,7 +56,7 @@ interface EventRenderArgs {
   standalone: true,
   imports: [DayPilotModule, CommonModule, FormsModule],
   templateUrl: './resource-calendar.component.html',
-  styleUrls: ['./resource-calendar.component.scss'],
+  styleUrls: ['./resource-calendar.component.scss']
 })
 export class ResourceCalendarComponent implements AfterViewInit {
   @ViewChild('day') day!: DayPilotCalendarComponent;
@@ -68,8 +74,8 @@ export class ResourceCalendarComponent implements AfterViewInit {
   contextMenu = new DayPilot.Menu({
     items: [
       { text: 'Edit...', onClick: (args) => this.editEvent(args.source) },
-      { text: 'Delete', onClick: (args) => this.deleteEvent(args.source) },
-    ],
+      { text: 'Delete', onClick: (args) => this.deleteEvent(args.source) }
+    ]
   });
 
   configNavigator: DayPilot.NavigatorConfig = {
@@ -77,10 +83,10 @@ export class ResourceCalendarComponent implements AfterViewInit {
     cellWidth: 25,
     cellHeight: 25,
     selectMode: 'Week',
-    onVisibleRangeChanged: () => this.loadResourcesAndEvents(),
+    onVisibleRangeChanged: () => this.loadResourcesAndEvents()
   };
 
-  constructor(private readonly ds: ResourceService) { }
+  constructor(private readonly ds: ResourceService) {}
 
   ngAfterViewInit(): void {
     this.loadResourcesAndEvents();
@@ -99,26 +105,28 @@ export class ResourceCalendarComponent implements AfterViewInit {
         console.log('Raw events from backend:', events);
 
         // Map backend ReservationDto to ExtendedEventData
-        this.events = events.map(event => {
-          const resource = this.resources.find(r => r.resourceId === event.resourceId);
-          return {
-            id: event.reservationId.toString(), // Convert Long to string for DayPilot
-            start: event.startTime,
-            end: event.endTime,
-            text: event.title,
-            // text: `Reservation #${event.reservationId}`, // Default text if none provided
-            resource: resource?.resourceName || event.resourceId.toString(), // Use resourceName if available
-            resourceId: event.resourceId, // Keep for reference
-            // recurrence: event.recurrence,
-            status: event.status,
-            barColor: '#6fa8dc' // Default color
-          };
-        }).filter(event => event.resource === this.selectedResource.resourceName);
+        this.events = events
+          .map((event) => {
+            const resource = this.resources.find((r) => r.resourceId === event.resourceId);
+            return {
+              id: event.reservationId.toString(), // Convert Long to string for DayPilot
+              start: event.startTime,
+              end: event.endTime,
+              text: event.title,
+              // text: `Reservation #${event.reservationId}`, // Default text if none provided
+              resource: resource?.resourceName || event.resourceId.toString(), // Use resourceName if available
+              resourceId: event.resourceId, // Keep for reference
+              // recurrence: event.recurrence,
+              status: event.status,
+              barColor: '#6fa8dc' // Default color
+            };
+          })
+          .filter((event) => event.resource === this.selectedResource.resourceName);
 
         console.log('Mapped and filtered events:', this.events);
         this.updateCalendars();
       },
-      error: (err) => console.error('Error loading data:', err),
+      error: (err) => console.error('Error loading data:', err)
     });
   }
 
@@ -208,35 +216,38 @@ export class ResourceCalendarComponent implements AfterViewInit {
       const startStr = args.start.toString('yyyy-MM-ddTHH:mm:ss');
       const endStr = args.end.toString('yyyy-MM-ddTHH:mm:ss');
 
-      const basicForm = await DayPilot.Modal.form([
-        { name: 'Title', id: 'title' },
+      const basicForm = await DayPilot.Modal.form(
+        [
+          { name: 'Title', id: 'title' },
+          {
+            name: 'Reservation Type',
+            id: 'reservationType',
+            type: 'select',
+            options: [
+              { id: 'oneTime', name: 'One-Time Reservation' },
+              { id: 'recurring', name: 'Recurring Reservation' }
+            ]
+          },
+          {
+            name: 'Start Time',
+            id: 'start',
+            type: 'datetime',
+            dateFormat: 'yyyy-MM-dd'
+          },
+          {
+            name: 'End Time',
+            id: 'end',
+            type: 'datetime',
+            dateFormat: 'yyyy-MM-dd'
+          }
+        ],
         {
-          name: 'Reservation Type',
-          id: 'reservationType',
-          type: 'select',
-          options: [
-            { id: 'oneTime', name: 'One-Time Reservation' },
-            { id: 'recurring', name: 'Recurring Reservation' }
-          ]
-        },
-        {
-          name: 'Start Time',
-          id: 'start',
-          type: 'datetime',
-          dateFormat: 'yyyy-MM-dd'
-        },
-        {
-          name: 'End Time',
-          id: 'end',
-          type: 'datetime',
-          dateFormat: 'yyyy-MM-dd'
+          title: 'New Reservation',
+          start: startStr,
+          end: endStr,
+          reservationType: 'oneTime'
         }
-      ], {
-        title: 'New Reservation',
-        start: startStr,
-        end: endStr,
-        reservationType: 'oneTime'
-      });
+      );
 
       if (basicForm.canceled) {
         console.log('Form cancelled');
@@ -246,36 +257,39 @@ export class ResourceCalendarComponent implements AfterViewInit {
       let formResult = basicForm.result;
 
       if (basicForm.result.reservationType === 'recurring') {
-        const recurringForm = await DayPilot.Modal.form([
+        const recurringForm = await DayPilot.Modal.form(
+          [
+            {
+              name: 'Frequency',
+              id: 'frequency',
+              type: 'select',
+              options: [
+                { id: 'Daily', name: 'Daily' },
+                { id: 'Weekly', name: 'Weekly' },
+                { id: 'Monthly', name: 'Monthly' }
+              ]
+            },
+            { name: 'Interval', id: 'interval', type: 'number' },
+            {
+              name: 'Days of Week',
+              id: 'daysOfWeek',
+              type: 'select',
+              options: this.dayNames.map((day, index) => ({ id: index, name: day }))
+            },
+            {
+              name: 'Recurrence End',
+              id: 'recurrenceEnd',
+              type: 'datetime',
+              dateFormat: 'yyyy-MM-dd'
+            }
+          ],
           {
-            name: 'Frequency',
-            id: 'frequency',
-            type: 'select',
-            options: [
-              { id: 'Daily', name: 'Daily' },
-              { id: 'Weekly', name: 'Weekly' },
-              { id: 'Monthly', name: 'Monthly' }
-            ]
-          },
-          { name: 'Interval', id: 'interval', type: 'number' },
-          {
-            name: 'Days of Week',
-            id: 'daysOfWeek',
-            type: 'select',
-            options: this.dayNames.map((day, index) => ({ id: index, name: day }))
-          },
-          {
-            name: 'Recurrence End',
-            id: 'recurrenceEnd',
-            type: 'datetime',
-            dateFormat: 'yyyy-MM-dd'
+            frequency: 'Daily',
+            interval: 1,
+            daysOfWeek: args.start.getDayOfWeek(),
+            recurrenceEnd: args.start.addDays(7).toString('yyyy-MM-ddTHH:mm:ss')
           }
-        ], {
-          frequency: 'Daily',
-          interval: 1,
-          daysOfWeek: args.start.getDayOfWeek(),
-          recurrenceEnd: args.start.addDays(7).toString('yyyy-MM-ddTHH:mm:ss')
-        });
+        );
 
         if (recurringForm.canceled) {
           console.log('Recurring form cancelled');
@@ -297,12 +311,15 @@ export class ResourceCalendarComponent implements AfterViewInit {
         resourceId: Number(this.selectedResource.resourceId), // Ensure it's a number
         startTime: formatDateTime(formResult.start),
         endTime: formatDateTime(formResult.end),
-        recurrence: formResult.reservationType === 'recurring' ? {
-          frequency: formResult.frequency,
-          interval: formResult.interval,
-          endDate: formatDateTime(formResult.recurrenceEnd),
-          daysOfWeek: formResult.frequency === 'Weekly' ? [formResult.daysOfWeek] : undefined
-        } : undefined
+        recurrence:
+          formResult.reservationType === 'recurring'
+            ? {
+                frequency: formResult.frequency,
+                recurrenceInterval: formResult.interval,
+                endDate: formatDateTime(formResult.recurrenceEnd),
+                daysOfWeek: formResult.frequency === 'Weekly' ? [formResult.daysOfWeek] : undefined
+              }
+            : undefined
       };
       console.log('Creating reservation with recurrence:', reservation);
 
@@ -320,7 +337,7 @@ export class ResourceCalendarComponent implements AfterViewInit {
           dp.events.add(new DayPilot.Event(newEvent));
           this.loadResourcesAndEvents(); // Refresh to show all instances
         },
-        error: (err) => console.error('Error creating reservation:', err),
+        error: (err) => console.error('Error creating reservation:', err)
       });
     } catch (error) {
       console.error('Error in reservation process:', error);
@@ -333,25 +350,28 @@ export class ResourceCalendarComponent implements AfterViewInit {
       const startStr = event.start().toString('yyyy-MM-ddTHH:mm:ss');
       const endStr = event.end().toString('yyyy-MM-ddTHH:mm:ss');
 
-      const form = await DayPilot.Modal.form([
-        { name: 'Title', id: 'title' },
+      const form = await DayPilot.Modal.form(
+        [
+          { name: 'Title', id: 'title' },
+          {
+            name: 'Start Time',
+            id: 'start',
+            type: 'datetime',
+            dateFormat: 'yyyy-MM-ddTHH:mm:ss'
+          },
+          {
+            name: 'End Time',
+            id: 'end',
+            type: 'datetime',
+            dateFormat: 'yyyy-MM-ddTHH:mm:ss'
+          }
+        ],
         {
-          name: 'Start Time',
-          id: 'start',
-          type: 'datetime',
-          dateFormat: 'yyyy-MM-ddTHH:mm:ss'
-        },
-        {
-          name: 'End Time',
-          id: 'end',
-          type: 'datetime',
-          dateFormat: 'yyyy-MM-ddTHH:mm:ss'
+          title: event.text(),
+          start: startStr,
+          end: endStr
         }
-      ], {
-        title: event.text(),
-        start: startStr,
-        end: endStr
-      });
+      );
 
       if (form.canceled) {
         console.log('Edit cancelled');
@@ -400,10 +420,14 @@ export class ResourceCalendarComponent implements AfterViewInit {
 
   private getActiveCalendar(): DayPilot.Calendar | DayPilot.Month | null {
     switch (this.activeView) {
-      case 'day': return this.day?.control || null;
-      case 'week': return this.week?.control || null;
-      case 'month': return this.month?.control || null;
-      default: return null;
+      case 'day':
+        return this.day?.control || null;
+      case 'week':
+        return this.week?.control || null;
+      case 'month':
+        return this.month?.control || null;
+      default:
+        return null;
     }
   }
 
@@ -419,8 +443,8 @@ export class ResourceCalendarComponent implements AfterViewInit {
         symbol: '/icons/daypilot.svg#threedots-h',
         cssClass: 'event-menu',
         toolTip: 'Menu',
-        visibility: 'Hover',
-      },
+        visibility: 'Hover'
+      }
     ];
     args.data.areas = areas;
 
@@ -428,14 +452,15 @@ export class ResourceCalendarComponent implements AfterViewInit {
       args.data.backColor = args.data.barColor + '33';
     }
 
-    const resourceName = this.resources.find(r => String(r.resourceId) === args.data.resource)?.resourceName;
+    const resourceName = this.resources.find((r) => String(r.resourceId) === args.data.resource)?.resourceName;
     const recurrenceText = args.data.recurrence
-      ? `Recurring: ${args.data.recurrence.frequency} every ${args.data.recurrence.interval} ${args.data.recurrence.frequency === 'Weekly'
-        ? 'week(s) on ' + (args.data.recurrence.daysOfWeek?.map(d => this.dayNames[d]).join(', ') || '')
-        : args.data.recurrence.frequency === 'Daily'
-          ? 'day(s)'
-          : 'month(s)'
-      } until ${args.data.recurrence.endDate}`
+      ? `Recurring: ${args.data.recurrence.frequency} every ${args.data.recurrence.recurrenceInterval} ${
+          args.data.recurrence.frequency === 'Weekly'
+            ? 'week(s) on ' + (args.data.recurrence.daysOfWeek?.map((d) => this.dayNames[d]).join(', ') || '')
+            : args.data.recurrence.frequency === 'Daily'
+              ? 'day(s)'
+              : 'month(s)'
+        } until ${args.data.recurrence.endDate}`
       : '';
 
     args.data.html = `<div class="event-content">${args.data.text}<br><small>${resourceName}${args.data.recurrence ? ' (Recurring)' : ''}</small></div>`;
