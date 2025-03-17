@@ -16,6 +16,7 @@ import { EnrollmentComponent } from './pages/admin/dashboard/enrollment/enrollme
 import { authGuard } from './services/guard/auth.guard';
 import { GroupViewComponent } from './components/common/chat/group-view/group-view.component';
 import { GroupChatComponent } from './components/common/chat/group-chat/group-chat.component';
+import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
 
 const routes: Routes = [
   {
@@ -63,6 +64,9 @@ const routes: Routes = [
       {
         path: 'create-group',
         loadComponent: () => import('./components/admin/create-group/create-group.component').then((m) => m.CreateGroupComponent)
+      },
+      {
+        path: 'schedule-calendar', component: ScheduleComponent
       },
       { path: 'course', component: CourseComponent },
       { path: 'course/:courseCode', component: CourseDetailComponent },
