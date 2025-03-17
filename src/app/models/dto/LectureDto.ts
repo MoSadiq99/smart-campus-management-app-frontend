@@ -11,5 +11,5 @@ export interface LectureDto {
   courseId: number;
   lecturerId: number;
   subjectId: number;
-  resources: number[];
+  resource: number;
 }

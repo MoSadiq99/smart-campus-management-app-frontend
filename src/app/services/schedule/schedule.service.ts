@@ -6,22 +6,9 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { DayPilot } from '@daypilot/daypilot-lite-angular';
 import { environment } from 'src/environments/environment';
-import { ResourceDto } from 'src/app/models/dto/ResourceDto';
-import { ReservationCreateDto } from 'src/app/models/dto/ReservationCreateDto';
+import { ReservationDto } from 'src/app/models/dto/ReservationDto';
 import { LectureDto } from 'src/app/models/dto/LectureDto';
 import { LectureCreateDto } from 'src/app/models/dto/LectureCreateDto';
-
-export interface BackendReservationDto {
-  title: string;
-  reservationId: number;
-  resourceId: number;
-  startTime: string;
-  endTime: string;
-  lectureId?: number | null;
-  eventId?: number | null;
-  status?: string;
-  // recurrence?: RecurrencePattern;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -29,23 +16,27 @@ export interface BackendReservationDto {
 export class ScheduleService {
   constructor(private readonly http: HttpClient) {}
 
-  getLectures(from: DayPilot.Date, to: DayPilot.Date): Observable<LectureDto[]> {
+  getEvents(from: DayPilot.Date, to: DayPilot.Date): Observable<ReservationDto[]> {
     return this.http
-      .get<LectureDto[]>(`${environment.apiUrl}/lectures?from=${from.toString()}&to=${to.toString()}`)
+      .get<ReservationDto[]>(`${environment.apiUrl}/lectures/reservations?from=${from.toString()}&to=${to.toString()}`)
       .pipe(catchError(this.handleError));
   }
 
-  createLectures(lecture: LectureCreateDto): Observable<LectureDto> {
-    console.log('Creating lecture:', lecture);
-    return this.http.post<LectureDto>(`${environment.apiUrl}/lectures`, lecture);
+  getLectures(): Observable<LectureDto[]> {
+    return this.http.get<LectureDto[]>(`${environment.apiUrl}/lectures`).pipe(catchError(this.handleError));
   }
 
-  updateLecture(id: string, lecture: any): Observable<void> {
-    return this.http.put<void>(`${environment.apiUrl}/lectures/${id}`, lecture);
+  createLecture(lecture: LectureCreateDto): Observable<ReservationDto> {
+    console.log('Creating lecture:', lecture);
+    return this.http.post<ReservationDto>(`${environment.apiUrl}/lectures`, lecture);
+  }
+
+  updateReservation(id: string, reservation: any): Observable<void> {
+    return this.http.put<void>(`${environment.apiUrl}/resources/reservations/${id}`, reservation);
   }
 
   deleteLecture(id: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiUrl}/lectures/${id}`);
+    return this.http.delete<void>(`${environment.apiUrl}/resources/reservations/${id}`);
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

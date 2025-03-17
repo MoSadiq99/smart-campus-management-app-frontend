@@ -1,6 +1,6 @@
 // resource-calendar.component.ts (optimized version)
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, resource } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -21,6 +21,7 @@ import { SubjectService } from 'src/app/services/subject.service';
 import { LectureDto } from 'src/app/models/dto/LectureDto';
 import { ResourceService } from 'src/app/components/admin/resource/resource.service';
 import { ResourceDto } from 'src/app/models/dto/ResourceDto';
+import { ReservationDto } from 'src/app/models/dto/ReservationDto';
 
 interface AreaData {
   top: number;
@@ -46,7 +47,7 @@ export interface ExtendedEventData extends DayPilot.EventData {
   resource: string; // Will store resourceId as string for filtering, resolved to name in rendering
   recurrence?: RecurrencePattern;
   toolTip?: string;
-  resourceId?: number; // Optional: Keep backend resourceId for reference
+  lectureId?: number; // Optional: Keep backend resourceId for reference
   status?: string; // Optional: If you want to display status
 }
 
@@ -74,13 +75,21 @@ export class ScheduleComponent implements AfterViewInit {
   lectures: LectureDto[] = [];
   lectureEvents: DayPilot.EventData[] = [];
   resources: ResourceDto[] = [];
-
   date = DayPilot.Date.today();
   courses: CourseDto[] = [];
   subjects: SubjectDto[] = [];
+  reservationEvents: ExtendedEventData[] = [];
   activeView: 'day' | 'week' | 'month' = 'week';
   selectedCourse!: CourseDto;
-  dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  dayNames = [
+    { id: 0, name: 'Sunday' },
+    { id: 1, name: 'Monday' },
+    { id: 2, name: 'Tuesday' },
+    { id: 3, name: 'Wednesday' },
+    { id: 4, name: 'Thursday' },
+    { id: 5, name: 'Friday' },
+    { id: 6, name: 'Saturday' }
+  ];
 
   contextMenu = new DayPilot.Menu({
     items: [
@@ -94,7 +103,7 @@ export class ScheduleComponent implements AfterViewInit {
     cellWidth: 25,
     cellHeight: 25,
     selectMode: 'Week',
-    onVisibleRangeChanged: () => this.loadLectures()
+    onVisibleRangeChanged: () => this.loadLecturesAndEvents()
   };
 
   constructor(
@@ -105,35 +114,52 @@ export class ScheduleComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
-    this.loadLectures();
+    this.loadLecturesAndEvents();
     this.loadCoursesAndSubjects();
   }
 
-  loadLectures(): void {
+  loadLecturesAndEvents(): void {
     const from = this.nav.control.visibleStart();
     const to = this.nav.control.visibleEnd();
 
-    this.scheduleService.getLectures(from, to).subscribe((lectures) => {
-      this.lectures = lectures;
-    });
+    forkJoin([this.scheduleService.getLectures(), this.scheduleService.getEvents(from, to)]).subscribe({
+      next: ([lectures, events]) => {
+        this.lectures = lectures;
+        console.log('Raw events from backend:', events);
 
-    this.lectureEvents = this.mapToEventData(this.lectures);
+        // Map backend ReservationDto to ExtendedEventData
+        this.lectureEvents = events.map((event) => {
+          const lecture = this.lectures.find((lec) => lec.id === event.lectureId);
+          return this.mapToEventData(event, lecture);
+        });
+
+        console.log('Mapped and filtered events:', this.lectureEvents);
+        this.updateCalendars();
+      },
+      error: (error) => {
+        console.error('Error fetching lectures and events:', error);
+      }
+    });
   }
 
-  mapToEventData(lectures: LectureDto[]): DayPilot.EventData[] {
-    return lectures.map((lecture) => ({
-      id: lecture.id,
-      start: String(lecture.startTime),
-      end: String(lecture.endTime),
-      text: lecture.title,
+  mapToEventData(event: ReservationDto, lecture?: LectureDto) {
+    return {
+      id: event.reservationId.toString(), // Convert Long to string for DayPilot
+      start: event.startTime,
+      end: event.endTime,
+      text: event.title,
+      lectureId: event?.lectureId, // Keep for reference
+      status: event.status,
+      barColor: '#6fa8dc', // Default color
       tags: {
-        recurrencePattern: lecture.recurrencePattern,
-        courseId: lecture.courseId,
-        lecturerId: lecture.lecturerId,
-        subjectId: lecture.subjectId,
-        resources: lecture.resources
+        description: lecture?.description,
+        recurrencePattern: lecture?.recurrencePattern,
+        courseId: lecture?.courseId,
+        lecturerId: lecture?.lecturerId,
+        subjectId: lecture?.subjectId,
+        resource: lecture?.resource
       }
-    }));
+    };
   }
 
   loadCoursesAndSubjects(): void {
@@ -147,7 +173,6 @@ export class ScheduleComponent implements AfterViewInit {
 
     this.resourceService.getAllResources().subscribe((resources) => {
       this.resources = resources;
-      console.log(`Resources: ${resources.map((r) => r.resourceId)}`);
     });
   }
 
@@ -225,7 +250,7 @@ export class ScheduleComponent implements AfterViewInit {
     this.configDay.startDate = date;
     this.configWeek.startDate = date;
     this.configMonth.startDate = date;
-    this.loadLectures();
+    this.loadLecturesAndEvents();
   }
   async onTimeRangeSelected(args: DayPilot.CalendarTimeRangeSelectedArgs): Promise<void> {
     console.log('Time range selected:', args.start, args.end, args.resource);
@@ -273,16 +298,10 @@ export class ScheduleComponent implements AfterViewInit {
             options: this.courses.map((course) => ({ id: course.courseId, name: course.courseName }))
           },
           {
-            name: 'Resources',
-            id: 'resources',
-            type: 'table',
-            columns: [
-              {
-                name: 'Name',
-                id: 'resource',
-                options: this.resources.map((resource) => ({ id: resource.resourceId, name: resource.resourceName }))
-              }
-            ]
+            name: 'Resource',
+            id: 'resource',
+            type: 'select',
+            options: this.resources.map((resource) => ({ id: resource.resourceId, name: resource.resourceName }))
           }
         ],
         {
@@ -316,10 +335,7 @@ export class ScheduleComponent implements AfterViewInit {
         return;
       }
 
-      console.log(
-        'Resource: ',
-        formResult.resources.map((r) => r.resource)
-      );
+      console.log('Resource: ', formResult.resource);
 
       formResult = { ...formResult, ...subjectForm.result };
 
@@ -340,8 +356,14 @@ export class ScheduleComponent implements AfterViewInit {
             {
               name: 'Days of Week',
               id: 'daysOfWeek',
-              type: 'select',
-              options: this.dayNames.map((day, index) => ({ id: index, name: day }))
+              type: 'table',
+              columns: [
+                {
+                  name: 'Day',
+                  id: 'days',
+                  options: this.dayNames.map((day) => ({ id: day.id, name: day.name }))
+                }
+              ]
             },
             {
               name: 'Recurrence End',
@@ -353,8 +375,8 @@ export class ScheduleComponent implements AfterViewInit {
           {
             frequency: 'Daily',
             interval: 1,
-            daysOfWeek: args.start.getDayOfWeek(),
-            recurrenceEnd: args.start.addDays(7).toString('yyyy-MM-ddTHH:mm:ss')
+            daysOfWeek: [formResult.start.getDayOfWeek()],
+            recurrenceEnd: args.start.addMonths(1).toString('yyyy-MM-ddTHH:mm:ss')
           }
         );
 
@@ -375,18 +397,18 @@ export class ScheduleComponent implements AfterViewInit {
 
       const lecture: LectureCreateDto = {
         title: formResult.title,
-        lecturerId: formResult.subject,
+        lecturerId: 1, // TODO: Implement Select Lecturer
         description: formResult.description,
-        resources: formResult.resources.map((r) => r.resource),
-        startTime: formResult.start,
-        endTime: formResult.end,
+        resource: formResult.resource,
+        startTime: formResult.start.toString('yyyy-MM-ddTHH:mm:ss'),
+        endTime: formResult.end.toString('yyyy-MM-ddTHH:mm:ss'),
         recurrencePattern:
           formResult.recurrenceType === 'recurring'
             ? {
                 frequency: formResult.frequency,
-                interval: formResult.interval,
+                recurrenceInterval: formResult.interval,
                 endDate: formatDateTime(formResult.recurrenceEnd),
-                daysOfWeek: formResult.frequency === 'Weekly' ? [formResult.daysOfWeek] : undefined
+                daysOfWeek: formResult.frequency === 'Weekly' ? formResult.daysOfWeek.map((d) => d.days) : undefined
               }
             : undefined,
         courseId: formResult.course,
@@ -394,11 +416,12 @@ export class ScheduleComponent implements AfterViewInit {
       };
       console.log('Creating Lecture:', lecture);
 
-      this.scheduleService.createLectures(lecture).subscribe({
+      this.scheduleService.createLecture(lecture).subscribe({
         next: (response) => {
           console.log('Lecture created successfully:', response);
-          dp.events.add(this.mapToEventData([response])[0]);
-          this.loadLectures();
+          const lecture = this.lectures.find((lec) => lec.id === response.lectureId);
+          dp.events.add(this.mapToEventData(response, lecture));
+          this.loadLecturesAndEvents();
         },
         error: (error) => {
           console.error('Error creating lecture:', error);
@@ -409,7 +432,6 @@ export class ScheduleComponent implements AfterViewInit {
     }
   }
 
-  // TO EDIT ///////////////////////////////////////////////////////////////////////////////////
   async editEvent(event: DayPilot.Event): Promise<void> {
     try {
       // Ensure dates are in full ISO format
@@ -419,11 +441,6 @@ export class ScheduleComponent implements AfterViewInit {
       const form = await DayPilot.Modal.form(
         [
           { name: 'Title', id: 'title' },
-          {
-            name: 'Description',
-            id: 'description',
-            type: 'textarea'
-          },
           {
             name: 'Start Time',
             id: 'start',
@@ -435,42 +452,12 @@ export class ScheduleComponent implements AfterViewInit {
             id: 'end',
             type: 'datetime',
             dateFormat: 'yyyy-MM-dd'
-          },
-          {
-            name: 'Recurrence',
-            id: 'recurrenceType',
-            type: 'select',
-            options: [
-              { id: 'oneTime', name: 'One-Time Lecture' },
-              { id: 'recurring', name: 'Recurring Lecture' }
-            ]
-          },
-          {
-            name: 'Course',
-            id: 'course',
-            type: 'select',
-            options: this.courses.map((course) => ({ id: course.courseId, name: course.courseName }))
-          },
-          {
-            name: 'Resources',
-            id: 'resources',
-            type: 'table',
-            columns: [
-              {
-                name: 'Resource',
-                id: 'resource',
-                options: this.resources.map((resource) => ({ id: resource.resourceId, name: resource.resourceName }))
-              }
-            ]
           }
         ],
         {
           title: event.text(),
-          start: event.start(),
-          end: event.end(),
-          recurrenceType: event.data.recurrence ? 'recurring' : 'oneTime',
-          course: event.data.courseId,
-          resources: event.data.resources
+          start: startStr,
+          end: endStr
         }
       );
 
@@ -483,21 +470,23 @@ export class ScheduleComponent implements AfterViewInit {
         return new DayPilot.Date(dateStr).toString('yyyy-MM-ddTHH:mm:ss');
       };
 
-      const updatedEvent: ExtendedEventData = {
-        ...event.data,
-        text: form.result.title,
-        resource: event.resource(),
-        start: formatDateTime(form.result.start),
-        end: formatDateTime(form.result.end),
-        // Preserve recurrence if it exists
-        recurrence: event.data.recurrence
+      const updatedReservation: ReservationDto = {
+        reservationId: event.data.id,
+        title: form.result.title,
+        resourceId: event.data.tags.resource,
+        lectureId: event.data.tags.lectureId,
+        eventId: event.data.tags.eventId,
+        startTime: formatDateTime(form.result.start),
+        endTime: formatDateTime(form.result.end)
       };
 
-      this.scheduleService.updateLecture(event.id().toString(), updatedEvent).subscribe({
+      console.log('Updated Reservation:', updatedReservation);
+
+      this.scheduleService.updateReservation(event.id().toString(), updatedReservation).subscribe({
         next: () => {
           const calendar = this.getActiveCalendar();
           if (calendar) {
-            calendar.events.update(new DayPilot.Event(updatedEvent));
+            calendar.events.update(new DayPilot.Event(this.mapToEventData(updatedReservation)));
           }
         },
         error: (err) => console.error('Error updating reservation:', err)
