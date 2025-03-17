@@ -4,22 +4,17 @@
       <div class="card shadow-lg">
         <div class="card-header bg-primary text-white">
           <h3 class="card-title mb-0">Create a New Group</h3>
-          <p class="card-subtitle mb-0">Fill in the details to create a group</p>
+          <!-- <p class="card-subtitle mb-0">Fill in the details to create a group</p> -->
         </div>
         <div class="card-body">
           <form *ngIf="courses && users" [formGroup]="groupForm" (ngSubmit)="onSubmit()">
             <!-- Group Name -->
             <div class="mb-3">
               <label for="groupName" class="form-label">Group Name</label>
-              <input
-                id="groupName"
-                type="text"
-                class="form-control"
-                formControlName="groupName"
-                placeholder="e.g., CS101 Study Group"
-                required
-              />
-              <div *ngIf="groupForm.get('groupName')?.invalid && groupForm.get('groupName')?.touched" class="text-danger">
+              <input id="groupName" type="text" class="form-control" formControlName="groupName"
+                placeholder="e.g., CS101 Study Group" required />
+              <div *ngIf="groupForm.get('groupName')?.invalid && groupForm.get('groupName')?.touched"
+                class="text-danger">
                 <small *ngIf="groupForm.get('groupName')?.hasError('required')">Group name is required</small>
                 <small *ngIf="groupForm.get('groupName')?.hasError('minlength')">Must be at least 3 characters</small>
               </div>
@@ -28,24 +23,14 @@
             <!-- Description -->
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
-              <textarea
-                id="description"
-                class="form-control"
-                formControlName="description"
-                placeholder="e.g., A group for CS101 students to collaborate"
-                rows="3"
-              ></textarea>
+              <textarea id="description" class="form-control" formControlName="description"
+                placeholder="e.g., A group for CS101 students to collaborate" rows="3"></textarea>
             </div>
 
             <!-- Course Dropdown -->
             <div class="mb-3">
               <label for="courseId" class="form-label">Select Course</label>
-              <select
-                id="courseId"
-                class="form-select"
-                formControlName="courseId"
-                required
-              >
+              <select id="courseId" class="form-select" formControlName="courseId" required>
                 <option *ngFor="let course of courses" [value]="course.id">{{ course.name }}</option>
               </select>
               <div *ngIf="groupForm.get('courseId')?.invalid && groupForm.get('courseId')?.touched" class="text-danger">
@@ -56,22 +41,13 @@
             <!-- Initial Members -->
             <div class="mb-4">
               <label for="initialMemberIds" class="form-label">Initial Members (Optional)</label>
-              <select
-                id="initialMemberIds"
-                class="form-select"
-                formControlName="initialMemberIds"
-                multiple
-              >
-                <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+              <select id="initialMemberIds" class="form-select" formControlName="initialMemberIds" multiple>
+                <option *ngFor="let student of students" [value]="student.userId">{{ student.firstName }} {{ student.lastName }}</option>
               </select>
             </div>
 
             <!-- Submit Button -->
-            <button
-              type="submit"
-              class="btn btn-primary w-100"
-              [disabled]="groupForm.invalid"
-            >
+            <button type="submit" class="btn btn-primary w-100" [disabled]="groupForm.invalid">
               Create Group
             </button>
           </form>

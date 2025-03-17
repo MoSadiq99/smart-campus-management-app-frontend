@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MessageCreateDto, MessageDto } from './group.service';
+import { MessageCreateDto, MessageDto } from '../group.service';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 
 @Component({
@@ -112,18 +112,17 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 export class ChatComponent implements OnInit {
   @Input() messages: MessageDto[] = [];
   @Input() newMessage: MessageCreateDto = { senderId: 0, groupId: 0, content: '' };
+  @Input() currentUserId: number = 0;
   @Output() sendMessageEvent = new EventEmitter<void>();
   @Output() attachFileEvent = new EventEmitter<void>();
-
-  currentUserId: number = 0;
 
   constructor(private readonly authService: AuthenticationService) {}
 
   ngOnInit(): void {
-    const userId = this.authService.getCurrentUserId();
-    this.currentUserId = userId;
+    if (!this.currentUserId) {
+      this.currentUserId = this.authService.getCurrentUserId();
+    }
   }
-
 
   sendMessage(): void {
     console.log('Sending message:', this.newMessage);

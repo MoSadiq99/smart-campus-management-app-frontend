@@ -11,135 +11,164 @@ export interface NavigationItem {
   external?: boolean;
   target?: boolean;
   breadcrumbs?: boolean;
-
   children?: NavigationItem[];
 }
+
 export const NavigationItems: NavigationItem[] = [
   {
-    id: 'navigation',
-    title: 'Admin',
+    id: 'dashboard-group',
+    title: 'Dashboard',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'feather icon-home',
     children: [
       {
         id: 'dashboard',
         title: 'Dashboard',
         type: 'item',
-        url: 'admin/dashboard',
-        icon: 'feather icon-home',
-        classes: 'nav-item'
+        url: '/admin/dashboard',
+        classes: 'nav-item',
+        icon: 'feather icon-home'
       }
     ]
   },
   {
-    id: 'ui-element',
-    title: 'MANAGE',
+    id: 'enrollment-management',
+    title: 'Enrollment Management',
     type: 'group',
-    icon: 'icon-ui',
+    icon: 'feather icon-users',
     children: [
       {
-        id: 'basic',
-        title: 'CRUD',
-        type: 'collapse',
-        icon: 'feather icon-box',
-        children: [
-          {
-            id: 'button',
-            title: 'Chat',
-            type: 'item',
-            url: 'admin/chat',
-          },
-          {
-            id: 'badges',
-            title: 'Badges',
-            type: 'item',
-            url: '/basic/badges'
-          },
-          {
-            id: 'breadcrumb-pagination',
-            title: 'Breadcrumb & Pagination',
-            type: 'item',
-            url: '/basic/breadcrumb-paging'
-          },
-          {
-            id: 'collapse',
-            title: 'Collapse',
-            type: 'item',
-            url: '/basic/collapse'
-          },
-          {
-            id: 'tabs-pills',
-            title: 'Tabs & Pills',
-            type: 'item',
-            url: '/basic/tabs-pills'
-          },
-          {
-            id: 'typography',
-            title: 'Typography',
-            type: 'item',
-            url: '/basic/typography'
-          }
-        ]
+        id: 'manage-enrollments',
+        title: 'Manage Enrollments',
+        type: 'item',
+        url: '/admin/enrollment',
+        classes: 'nav-item',
+        icon: 'feather icon-user-plus'
+      },
+      {
+        id: 'manage-courses',
+        title: 'Manage Courses',
+        type: 'item',
+        url: '/admin/course',
+        classes: 'nav-item',
+        icon: 'feather icon-book'
+      },
+      {
+        id: 'manage-subjects',
+        title: 'Manage Subjects',
+        type: 'item',
+        url: '/admin/subject',
+        classes: 'nav-item',
+        icon: 'feather icon-book-open'
       }
     ]
   },
   {
-    id: 'pages',
-    title: 'Pages',
+    id: 'scheduling',
+    title: 'Scheduling',
     type: 'group',
-    icon: 'icon-pages',
+    icon: 'feather icon-clock',
     children: [
       {
-        id: 'auth',
-        title: 'Authentication',
-        type: 'collapse',
-        icon: 'feather icon-lock',
-        children: [
-          {
-            id: 'signup',
-            title: 'Sign up',
-            type: 'item',
-            url: '/auth/signup',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'signin',
-            title: 'Sign in',
-            type: 'item',
-            url: '/auth/signin',
-            target: true,
-            breadcrumbs: false
-          }
-        ]
-      },
-      {
-        id: 'sample-page',
-        title: 'Sample Page',
+        id: 'schedule-calendar',
+        title: 'Schedule Calendar',
         type: 'item',
-        url: '/sample-page',
+        url: '/admin/schedule-calendar',
         classes: 'nav-item',
-        icon: 'feather icon-sidebar'
-      },
-      {
-        id: 'disabled-menu',
-        title: 'Disabled Menu',
-        type: 'item',
-        url: 'javascript:',
-        classes: 'nav-item disabled',
-        icon: 'feather icon-power',
-        external: true
-      },
-      {
-        id: 'buy_now',
-        title: 'Buy Now',
-        type: 'item',
-        icon: 'feather icon-book',
-        classes: 'nav-item',
-        url: 'https://codedthemes.com/item/datta-able-angular/',
-        target: true,
-        external: true
+        icon: 'feather icon-calendar'
       }
     ]
-  }
+  },
+  {
+    id: 'events',
+    title: 'Events',
+    type: 'group',
+    icon: 'feather icon-star',
+    children: [
+      {
+        id: 'create-events',
+        title: 'Create Events',
+        type: 'item',
+        url: '/admin/event-calendar',
+        classes: 'nav-item',
+        icon: 'feather icon-plus-square'
+      },
+      {
+        id: 'manage-events',
+        title: 'Manage Events',
+        type: 'item',
+        url: '/admin/events',
+        classes: 'nav-item',
+        icon: 'feather icon-edit'
+      }
+    ]
+  },
+  {
+    id: 'resources',
+    title: 'Resources',
+    type: 'group',
+    icon: 'feather icon-briefcase',
+    children: [
+      {
+        id: 'resource-reservations',
+        title: 'Resource Reservations',
+        type: 'item',
+        url: '/admin/resource-calendar',
+        classes: 'nav-item',
+        icon: 'feather icon-bookmark'
+      },
+      {
+        id: 'manage-resources',
+        title: 'Manage Resources',
+        type: 'item',
+        url: '/admin/resource',
+        classes: 'nav-item',
+        icon: 'feather icon-settings'
+      }
+    ]
+  },
+  {
+    id: 'collaboration',
+    title: 'Collaboration',
+    type: 'group',
+    icon: 'feather icon-message-square',
+    children: [
+      {
+        id: 'chat',
+        title: 'Chat',
+        type: 'item',
+        url: '/admin/chat',
+        classes: 'nav-item',
+        icon: 'feather icon-message-circle'
+      }
+    ]
+  },
+  // {
+  //   id: 'authentication',
+  //   title: 'Authentication',
+  //   type: 'group',
+  //   icon: 'feather icon-lock',
+  //   children: [
+  //     {
+  //       id: 'user-registration',
+  //       title: 'User Registration',
+  //       type: 'item',
+  //       url: '/auth/signup',
+  //       target: true,
+  //       breadcrumbs: false,
+  //       classes: 'nav-item',
+  //       icon: 'feather icon-user-plus'
+  //     },
+  //     {
+  //       id: 'user-login',
+  //       title: 'User Login',
+  //       type: 'item',
+  //       url: '/auth/signin',
+  //       target: true,
+  //       breadcrumbs: false,
+  //       classes: 'nav-item',
+  //       icon: 'feather icon-log-in'
+  //     }
+  //   ]
+  // }
 ];

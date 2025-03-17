@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GroupService, GroupCreateDto } from '../../common/chat/group.service';
-import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,17 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CourseService } from 'src/app/services/course.service';
 import { CourseDto } from 'src/app/models/course-dto';
 import { StudentDto } from 'src/app/models/student-dto';
-
-// interface Course {
-//   id: number;
-//   name: string;
-// }
-
-// interface User {
-//   id: number;
-//   username: string;
-//   email: string;
-// }
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 
 @Component({
   selector: 'app-create-group',
@@ -134,7 +123,7 @@ export class CreateGroupComponent implements OnInit {
   students: StudentDto[] = [];
 
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
     private readonly groupService: GroupService,
     private readonly authService: AuthenticationService,
     private readonly courseService: CourseService,
@@ -168,10 +157,6 @@ export class CreateGroupComponent implements OnInit {
     this.courseService.getEnrolledStudentsList(courseId).subscribe({
       next: (students) => {
         this.students = students;
-        // const currentUserId = this.authService.getCurrentUserId();
-        // if (currentUserId && !this.students.some(u => u.userId === currentUserId)) {
-        //   this.students.push({ userId: currentUserId, firstName: 'You'}); // Ensure current user is included
-        // }
       },
       error: () => this.snackBar.open('Failed to load users for this course', 'Close', { duration: 3000 })
     });
@@ -182,7 +167,9 @@ export class CreateGroupComponent implements OnInit {
       const groupData: GroupCreateDto = {
         ...this.groupForm.value,
         creatorId: this.authService.getCurrentUserId() || 0
+
       };
+
       this.groupService.createGroup(groupData).subscribe({
         next: () => {
           this.snackBar.open('Group created successfully!', 'Close', { duration: 3000 });

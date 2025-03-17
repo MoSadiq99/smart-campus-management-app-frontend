@@ -10,8 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TaskCreateDto, TaskDto, GroupService } from './group.service';
-import { UserDto } from '../../../services/auth/user.service';
+import { TaskCreateDto, TaskDto, GroupService, MemberDto } from '../group.service';
+import { UserDto } from '../../../../services/auth/user.service';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 
@@ -53,8 +53,8 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
               <mat-label>Assign To</mat-label>
               <mat-select [(ngModel)]="newTask.assignedToId" name="assignedToId">
                 <mat-option [value]="null">All Group Members</mat-option>
-                <mat-option *ngFor="let member of groupMembers" [value]="member.id">
-                  {{ member.name }}
+                <mat-option *ngFor="let member of groupMembers" [value]="member.userId">
+                  {{ member.firstName }} {{ member.lastName }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -323,8 +323,10 @@ export class TasksComponent implements OnInit {
   @Input() newTask: TaskCreateDto = { title: '', description: '', assignedToId: null, assignedToGroupId: null, dueDate: null };
   @Input() groupId: number;
   @Output() createTaskEvent = new EventEmitter<void>();
-  tasks: TaskDto[] = [];
-  groupMembers: UserDto[] = [];
+  @Input() members: MemberDto[] = [];
+  @Input() tasks: TaskDto[] = [];
+  @Output() deleteTaskEvent = new EventEmitter<number>();
+  groupMembers: MemberDto[] = [];
   selectedTaskId: number | null = null;
   currentUser: UserDto | null = null;
 
@@ -401,8 +403,8 @@ export class TasksComponent implements OnInit {
   }
 
   getMemberName(userId: number): string {
-    const member = this.groupMembers.find(m => m.id === userId);
-    return member?.name || 'Unknown';
+    const member = this.groupMembers.find(m => m.userId === userId);
+    return member?.firstName || 'All Members';
   }
 
   resetTaskForm(): void {

@@ -17,6 +17,7 @@ interface JwtPayload {
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
 
+
   private currentUserRole: string;
   static readonly RegisterPath = 'http://localhost:8080/api/register';
   static readonly LoginPath = 'http://localhost:8080/api/authenticate';

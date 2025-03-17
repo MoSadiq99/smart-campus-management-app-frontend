@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CourseCreateDto, CourseDto } from 'src/app/models/course-dto';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { StudentDto } from '../models/student-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,8 @@ export class CourseService {
     return this.http.get<number[]>(`${environment.apiUrl}/courses/${courseId}/enrolled-students`);
   }
 
-  public getEnrolledStudentsList(courseId: number): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/courses/${courseId}/enrolled-students-list`);
+  public getEnrolledStudentsList(courseId: number): Observable<StudentDto[]> {
+    return this.http.get<StudentDto[]>(`${environment.apiUrl}/courses/${courseId}/enrolled-students-list`);
   }
 
   public enrollStudents(courseId: number, studentIds: number[]): Observable<any> {

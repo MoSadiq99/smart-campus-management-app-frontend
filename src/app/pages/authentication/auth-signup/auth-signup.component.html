@@ -1,20 +1,20 @@
 <div class="auth-wrapper">
-  <div class="auth-content">    
+  <div class="auth-content">
     <div class="card">
       <div class="card-body text-center">
         <h3 class="mb-4 fw-bold">Create an Account</h3>
         <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
           <div class="mb-3">
-              <input type="text" class="form-control rounded-pill shadow-sm border-primary" placeholder="Firstname" formControlName="firstName" />
+              <input type="text" class="form-control rounded-pill shadow-sm border-primary" placeholder="First Name" formControlName="firstName" />
           </div>
           <div class="mb-3">
-            <input type="text" class="form-control rounded-pill shadow-sm border-primary" placeholder="Lastname" formControlName="lastName" />
+            <input type="text" class="form-control rounded-pill shadow-sm border-primary" placeholder="Last Name" formControlName="lastName" />
         </div>
           <div class="mb-3">
             <input type="email" formControlName="email" class="form-control rounded-pill shadow-sm border-primary" placeholder="Email" formControlName="email" />
           </div>
 
-          <div class="mb-3">        
+          <div class="mb-3">
               <input type="password" class="form-control rounded-pill shadow-sm border-primary"
               autocomplete="new-password" placeholder="Password" formControlName="password" />
           </div>

@@ -14,6 +14,8 @@ import { EnrollmentComponent } from './pages/admin/dashboard/enrollment/enrollme
 // import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
 
 import { authGuard } from './services/guard/auth.guard';
+import { GroupViewComponent } from './components/common/chat/group-view/group-view.component';
+import { GroupChatComponent } from './components/common/chat/group-chat/group-chat.component';
 
 const routes: Routes = [
   {
@@ -55,11 +57,9 @@ const routes: Routes = [
         loadComponent: () =>
           import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
       },
-      {
-        path: 'chat',
-        loadComponent: () => import('./components/common/chat/group-chat.component').then((m) => m.GroupChatComponent),
-        canActivate: [authGuard]
-      },
+      { path: 'chat', component: GroupViewComponent },
+      { path: 'group-chat/:id', component: GroupChatComponent },
+
       {
         path: 'create-group',
         loadComponent: () => import('./components/admin/create-group/create-group.component').then((m) => m.CreateGroupComponent)
@@ -68,7 +68,7 @@ const routes: Routes = [
       { path: 'course/:courseCode', component: CourseDetailComponent },
       { path: 'subject', component: SubjectComponent },
       { path: 'subject/:subjectId', component: SubjectDetailComponent },
-      { path: 'user', component: SubjectComponent },
+      // { path: 'user', component: SubjectComponent },
       { path: 'enrollment', component: EnrollmentComponent }
     ]
   },

@@ -21,4 +21,3 @@ export interface CourseDto {
     credits: number
     cordinatorId: number
   }
-  

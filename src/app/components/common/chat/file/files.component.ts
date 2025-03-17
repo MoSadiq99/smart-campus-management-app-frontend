@@ -5,7 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FileDto } from './group.service';
+import { FileDto } from '../group.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
@@ -113,13 +113,48 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class FilesComponent {
   @Input() files: FileDto[] = [];
+  @Input() isUploading: boolean = false;
   @Output() uploadFileEvent = new EventEmitter<Event>();
+  @Input() groupId!: number;
 
   constructor(private readonly http: HttpClient) {}
 
   onFileSelected(event: Event): void {
     this.uploadFileEvent.emit(event);
   }
+
+  // downloadFile(file: FileDto): void {
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     console.error('No authentication token found');
+  //     return;
+  //   }
+
+  //   file.groupId = 1; // Replace with actual groupId from the group
+  //   const url = `http://localhost:8080/api/groups/${file.groupId}/files/${file.fileId}`; // OR /api/files/download/${file.id}
+
+  //   // Set headers with Authorization
+  //   const headers = new HttpHeaders({
+  //     'Authorization': `Bearer ${token}`
+  //   });
+
+  //   // Fetch the file as a blob
+  //   this.http.get(url, { headers, responseType: 'blob' }).subscribe({
+  //     next: (blob) => {
+  //       const blobUrl = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.href = blobUrl;
+  //       a.download = file.fileName;
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       document.body.removeChild(a);
+  //       window.URL.revokeObjectURL(blobUrl);
+  //     },
+  //     error: (err) => {
+  //       console.error('File download failed:', err);
+  //     }
+  //   });
+  // }
 
   downloadFile(file: FileDto): void {
     const token = localStorage.getItem('token');
@@ -128,15 +163,12 @@ export class FilesComponent {
       return;
     }
 
-    file.groupId = 1; // Replace with actual groupId from the group
-    const url = `http://localhost:8080/api/groups/${file.groupId}/files/${file.fileId}`; // OR /api/files/download/${file.id}
+    const url = `http://localhost:8080/api/groups/${this.groupId}/files/${file.fileId}`; // Use input groupId
 
-    // Set headers with Authorization
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    // Fetch the file as a blob
     this.http.get(url, { headers, responseType: 'blob' }).subscribe({
       next: (blob) => {
         const blobUrl = window.URL.createObjectURL(blob);

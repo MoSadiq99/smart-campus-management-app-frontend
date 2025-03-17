@@ -3,15 +3,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { UserDto } from 'src/app/models/dto/UserDto';
 
-export interface UserDto {
-  id: number;
-  name: string;
-  email: string;
-  role: {
-    roleName: string;
-  };
-}
+// export interface UserDto {
+//   id: number;
+//   name: string;
+//   email: string;
+//   role: {
+//     roleName: string;
+//   };
+// }
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,7 @@ export class UserService {
 
   getCurrentUserId(): number | null {
     const userId = localStorage.getItem('userId');
+    console.log('userId:', userId);
     return userId ? parseInt(userId, 10) : null;
   }
 
@@ -58,17 +60,16 @@ export class UserService {
     return this.getUserById(userId);
   }
 
-  hasRole(roles: string[]): Observable<boolean> {
-    return this.getCurrentUser().pipe(
-      map(user => {
-        if (!user || !user.role) return false;
-        return roles.includes(user.role.roleName);
-      }),
-      catchError(() => of(false))
-    );
-  }
-
   isAdminOrLecturer(): Observable<boolean> {
     return this.hasRole(['ROLE_ADMIN', 'ROLE_LECTURER']);
   }
+
+  hasRole(roles: string []): Observable<boolean> {
+    return this.getCurrentUser().pipe(
+      map(user => user ? roles.includes(user.roleName) : false),
+      catchError(() => of(false))
+    );
+  }
 }
+export { UserDto };
+
