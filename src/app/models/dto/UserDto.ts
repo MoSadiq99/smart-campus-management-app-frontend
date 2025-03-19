@@ -4,8 +4,9 @@ export interface UserDto {
   lastName: string;
   email: string;
   address: string;
-  phone: string
+  phone: string;
   status: string;
   roleName: string;
   userType: string;
+  profileImage: string;
 }

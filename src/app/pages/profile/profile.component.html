@@ -1,0 +1,134 @@
+<div class="container mt-4">
+  <h2 class="m-0">Profile Settings</h2>
+  <p class="mb-4">Manage your account settings and preferences</p>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs" id="profileTabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#account">Account</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#notifications">Notifications</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#security">Security</a>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content mt-3 p-4">
+    <div id="account" class="tab-pane fade show active">
+      <h4>Account Details</h4>
+      <hr />
+      <img class="rounded-circle shadow-4-strong" style="width: 100px; height: 100px" alt="avatar" [src]="getProfileImageURL()" />
+      <hr />
+      <form class="row g-3">
+        <div class="col-md-6">
+          <label for="firstName" class="form-label">First Name</label>
+          <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="userDetails.firstName" />
+        </div>
+        <div class="col-md-6">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="userDetails.lastName" />
+        </div>
+        <div class="col-md-6">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" name="email" [value]="userDetails.email" disabled />
+        </div>
+        <div class="col-md-6">
+          <label for="contactNumber" class="form-label">Contact Number</label>
+          <input type="text" class="form-control" id="contactNumber" name="phone" [(ngModel)]="userDetails.phone" />
+        </div>
+        <div class="col-12">
+          <label for="addressMain" class="form-label">Address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="addressMain"
+            name="addressMain"
+            placeholder="1234 Main St"
+            [(ngModel)]="userDetails.address"
+          />
+        </div>
+
+        <div *ngIf="studentDto && userDetails.roleName === 'ROLE_STUDENT'" class="mt-5 row g-2">
+          <h4>Additional Information</h4>
+          <hr />
+          <div class="col-md-4">
+            <label for="studentIdNumber" class="form-label">Student ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="studentIdNumber"
+              name="studentIdNumber"
+              [value]="studentDto?.studentIdNumber"
+              disabled
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="major" class="form-label">Major</label>
+            <input type="text" class="form-control" id="major" name="major" [value]="studentDto?.major" disabled />
+          </div>
+        </div>
+
+        <div *ngIf="adminDto && userDetails.roleName === 'ROLE_ADMIN'" class="mt-5 row g-2">
+          <h4>Additional Information</h4>
+          <hr />
+          <div class="col-md-6">
+            <label for="adminTitle" class="form-label">Admin Title</label>
+            <input type="text" class="form-control" id="adminTitle" name="adminTitle" [value]="adminDto?.adminTitle" />
+          </div>
+        </div>
+
+        <div *ngIf="lecturerDto && userDetails.roleName === 'ROLE_LECTURER'" class="mt-5 row g-2">
+          <h4>Additional Information</h4>
+          <hr />
+          <div class="col-md-6">
+            <label for="department" class="form-label">Department</label>
+            <input type="text" class="form-control" id="department" name="department" [value]="lecturerDto?.department" disabled />
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button type="submit" (click)="saveChanges()" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="notifications" class="tab-pane fade">
+      <h4>Notification Settings</h4>
+      <hr />
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="emailNotifications" />
+        <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="smsNotifications" />
+        <label class="form-check-label" for="smsNotifications">SMS Notifications</label>
+      </div>
+    </div>
+
+    <div id="security" class="tab-pane fade">
+      <h4>Security Settings</h4>
+      <hr />
+      <form class="row g-2">
+        <div class="col-md-6">
+          <label for="currentPassword" class="form-label">Current Password</label>
+          <input type="password" class="form-control" id="currentPassword" />
+        </div>
+        <div class="w-100"></div>
+        <div class="col-md-6">
+          <label for="password1" class="form-label">New Password</label>
+          <input type="password" class="form-control" id="password1" />
+        </div>
+        <div class="col-md-6">
+          <label for="password2" class="form-label">Confirm New Password</label>
+          <input type="password" class="form-control" id="password2" />
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

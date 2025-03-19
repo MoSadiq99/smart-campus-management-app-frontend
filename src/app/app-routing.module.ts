@@ -9,10 +9,7 @@ import { SubjectComponent } from './pages/admin/dashboard/subject/subject.compon
 import { BrowserModule } from '@angular/platform-browser';
 import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
 import { SubjectDetailComponent } from './pages/admin/dashboard/subject/subject-detail/subject-detail.component';
-
 import { EnrollmentComponent } from './pages/admin/dashboard/enrollment/enrollment.component';
-// import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
-
 import { authGuard } from './services/guard/auth.guard';
 import { GroupViewComponent } from './components/common/chat/group-view/group-view.component';
 import { GroupChatComponent } from './components/common/chat/group-chat/group-chat.component';
@@ -66,14 +63,19 @@ const routes: Routes = [
         loadComponent: () => import('./components/admin/create-group/create-group.component').then((m) => m.CreateGroupComponent)
       },
       {
-        path: 'schedule-calendar', component: ScheduleComponent
+        path: 'schedule-calendar',
+        component: ScheduleComponent
       },
       { path: 'course', component: CourseComponent },
       { path: 'course/:courseCode', component: CourseDetailComponent },
       { path: 'subject', component: SubjectComponent },
       { path: 'subject/:subjectId', component: SubjectDetailComponent },
       // { path: 'user', component: SubjectComponent },
-      { path: 'enrollment', component: EnrollmentComponent }
+      { path: 'enrollment', component: EnrollmentComponent },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile.component').then((m) => m.ProfileComponent)
+      }
     ]
   },
   {
@@ -104,11 +106,10 @@ const routes: Routes = [
           import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
       },
 
-      // {
-      //   path: 'schedule-calendar',
-      //   loadComponent: () =>
-      //     import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
-      // },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile.component').then((m) => m.ProfileComponent)
+      },
       {
         path: 'schedule',
         loadComponent: () => import('./pages/admin/schedule/schedule.component').then((m) => m.ScheduleComponent)
@@ -127,6 +128,10 @@ const routes: Routes = [
       {
         path: 'dashboard'
         // loadComponent: () => import('./components/buyer/buyer-dashboard/buyer-dashboard.component').then((m) => m.BuyerDashboardComponent),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./pages/profile/profile.component').then((m) => m.ProfileComponent)
       }
     ]
   }

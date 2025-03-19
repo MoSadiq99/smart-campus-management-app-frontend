@@ -1,0 +1,13 @@
+.nav-tabs {
+  .nav-link {
+    color: #007bff;
+    &.active {
+      background-color: #007bff;
+      color: white;
+    }
+  }
+}
+
+.form-control {
+  border-radius: 5px;
+}
