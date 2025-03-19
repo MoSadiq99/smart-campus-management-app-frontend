@@ -17,7 +17,7 @@
           <li class="n-title">
             <p class="m-b-0">NEW</p>
           </li>
-          <li class="notification" *ngFor="let notification of notifications | slice:0:5">
+          <li class="notification" *ngFor="let notification of notifications | slice: 0 : 5">
             <div class="d-flex">
               <img class="img-radius" src="assets/images/user/avatar-1.jpg" alt="Generic placeholder image" />
               <div class="flex-grow-1">
@@ -25,7 +25,7 @@
                   <strong>{{ notification.message }}</strong>
                   <span class="n-time text-muted">
                     <i class="icon feather icon-clock m-r-10"></i>
-                    {{ notification.sentTime | date:'short' }}
+                    {{ notification.sentTime | date: 'short' }}
                   </span>
                 </p>
                 <p *ngIf="!notification.read">
@@ -37,7 +37,7 @@
           <li class="n-title" *ngIf="messages.length > 0">
             <p class="m-b-0">GROUP MESSAGES</p>
           </li>
-          <li class="notification" *ngFor="let message of messages | slice:0:3">
+          <li class="notification" *ngFor="let message of messages | slice: 0 : 3">
             <div class="d-flex">
               <img class="img-radius" src="assets/images/user/avatar-2.jpg" alt="Generic placeholder image" />
               <div class="flex-grow-1">
@@ -45,7 +45,7 @@
                   <strong>{{ message.senderName }}</strong>
                   <span class="n-time text-muted">
                     <i class="icon feather icon-clock m-r-10"></i>
-                    {{ message.sentTime | date:'short' }}
+                    {{ message.sentTime | date: 'short' }}
                   </span>
                 </p>
                 <p>{{ message.content }}</p>
@@ -75,22 +75,26 @@
         <ul class="pro-body">
           <li>
             <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-settings"></i> Settings
+              <i class="feather icon-settings"></i>
+              Settings
+            </a>
+          </li>
+          <li>
+            <a href="/admin/profile" class="dropdown-item">
+              <i class="feather icon-user"></i>
+              Profile
             </a>
           </li>
           <li>
             <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-user"></i> Profile
+              <i class="feather icon-mail"></i>
+              My Messages
             </a>
           </li>
           <li>
             <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-mail"></i> My Messages
-            </a>
-          </li>
-          <li>
-            <a href="javascript:" class="dropdown-item">
-              <i class="feather icon-lock"></i> Lock Screen
+              <i class="feather icon-lock"></i>
+              Lock Screen
             </a>
           </li>
         </ul>

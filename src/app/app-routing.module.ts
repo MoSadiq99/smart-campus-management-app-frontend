@@ -19,6 +19,7 @@ import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
 import { authGuard } from './services/guard/auth.guard';
 import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { EventsListComponent } from './components/common/events-list/events-list.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
         component: DashboardComponent,
@@ -50,7 +52,8 @@ const routes: Routes = [
       { path: 'course/:courseCode', component: CourseDetailComponent, canActivate: [authGuard] },
       { path: 'subject', component: SubjectComponent, canActivate: [authGuard] },
       { path: 'subject/:subjectId', component: SubjectDetailComponent, canActivate: [authGuard] },
-      { path: 'enrollment', component: EnrollmentComponent, canActivate: [authGuard] }
+      { path: 'enrollment', component: EnrollmentComponent, canActivate: [authGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
     ]
   },
   {
@@ -62,7 +65,8 @@ const routes: Routes = [
       { path: 'event-calendar', component: EventCalendarComponent, canActivate: [authGuard] },
       { path: 'resource-calendar', component: ResourceCalendarComponent, canActivate: [authGuard] },
       { path: 'schedule', component: ScheduleComponent, canActivate: [authGuard] },
-      { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] }
+      { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
     ]
   },
   {
@@ -71,7 +75,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard' },
-      { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] }
+      { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
     ]
   }
 ];
