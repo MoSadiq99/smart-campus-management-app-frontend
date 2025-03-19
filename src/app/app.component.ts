@@ -11,7 +11,7 @@ import { CalendarModule } from 'angular-calendar';
   imports: [
     SpinnerComponent,
     RouterModule,
-    CalendarModule
+    CalendarModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

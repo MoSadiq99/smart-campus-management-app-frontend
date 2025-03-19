@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MemberDto } from '../group.service';
+import { MemberDto } from '../../../../services/group/group.service';
 
 @Component({
   selector: 'app-members',

@@ -8,15 +8,6 @@ import { StudentDto } from 'src/app/models/student-dto';
 import { AdminDto } from 'src/app/models/dto/AdminDto';
 import { LecturerDto } from 'src/app/models/dto/LecturerDto';
 
-// export interface UserDto {
-//   id: number;
-//   name: string;
-//   email: string;
-//   role: {
-//     roleName: string;
-//   };
-// }
-
 @Injectable({
   providedIn: 'root'
 })

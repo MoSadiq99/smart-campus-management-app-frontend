@@ -7,7 +7,7 @@ import { catchError, tap, filter, map } from 'rxjs/operators';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { environment } from 'src/environments/environment';
-import { UserService } from '../../../services/auth/user.service';
+import { UserService } from '../auth/user.service';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { UserDto } from 'src/app/models/dto/UserDto';
 
@@ -32,7 +32,7 @@ export interface MessageDto {
   groupId: number;
   content: string;
   sentTime: string;
-  senderName?: string;
+  senderName: string;
 }
 
 export interface MessageCreateDto {

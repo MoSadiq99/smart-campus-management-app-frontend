@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // group-view.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { GroupService, GroupDto, MemberDto } from '../group.service';
+import { GroupService, GroupDto, MemberDto } from '../../../../services/group/group.service';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';

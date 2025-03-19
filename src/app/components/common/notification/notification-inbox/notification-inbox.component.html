@@ -1,8 +1,0 @@
-<h2>Notifications</h2>
-<mat-list>
-    <mat-list-item *ngFor="let notification of notifications" [ngClass]="{'unread': !notification.read}">
-        <span>{{ notification.message }}</span>
-        <span>{{ notification.sentTime | date:'short' }}</span>
-        <span>{{ notification.status }}</span>
-    </mat-list-item>
-</mat-list>

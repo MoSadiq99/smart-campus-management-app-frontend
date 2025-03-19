@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { Client } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import { environment } from 'src/environments/environment';
+import { AuthenticationService } from '../auth/authentication.service';
 
 export interface NotificationDto {
   id: number;
@@ -22,7 +23,7 @@ export class NotificationService {
   private stompClient: Client;
   private readonly notificationSubject = new Subject<NotificationDto>();
 
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient, private authService: AuthenticationService) {
     this.initializeWebSocketConnection();
   }
 
@@ -47,7 +48,7 @@ export class NotificationService {
 
       this.stompClient.onConnect = (frame) => {
         console.log('Notification WebSocket Connected:', frame);
-        
+
         const userId = localStorage.getItem('userId');
         if (userId) {
           this.stompClient.subscribe(`/topic/users/${userId}/notifications`, (message) => {
@@ -78,10 +79,10 @@ export class NotificationService {
   getAllNotifications(): Observable<NotificationDto[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    const userId = localStorage.getItem('userId');
-    
+    const userId = this.authService.getCurrentUserId();
+
     return this.http.get<NotificationDto[]>(
-      `${this.apiUrl}/users/${userId}/notifications`, 
+      `${this.apiUrl}/users/${userId}/notifications`,
       { headers }
     );
   }
@@ -89,10 +90,10 @@ export class NotificationService {
   markAsRead(notificationId: number): Observable<void> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
+
     return this.http.put<void>(
-      `${this.apiUrl}/notifications/${notificationId}/read`, 
-      {}, 
+      `${this.apiUrl}/notifications/${notificationId}/read`,
+      {},
       { headers }
     );
   }

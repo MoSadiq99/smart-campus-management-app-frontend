@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TaskCreateDto, TaskDto, GroupService, MemberDto } from '../group.service';
+import { TaskCreateDto, TaskDto, GroupService, MemberDto } from '../../../../services/group/group.service';
 import { UserDto } from '../../../../services/auth/user.service';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';

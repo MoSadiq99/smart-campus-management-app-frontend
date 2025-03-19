@@ -21,6 +21,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { httpTokenInterceptor } from './app/services/interceptors/http-token.interceptor';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 if (environment.production) {
   enableProdMode();
@@ -29,7 +31,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     // Core Angular modules
-    importProvidersFrom(BrowserModule, AppRoutingModule, FormsModule),
+    importProvidersFrom(BrowserModule, AppRoutingModule, FormsModule, CommonModule, RouterModule),
     provideAnimations(),
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([httpTokenInterceptor])),

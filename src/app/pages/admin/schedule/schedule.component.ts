@@ -1,6 +1,6 @@
 // resource-calendar.component.ts (optimized version)
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, ViewChild, AfterViewInit, resource } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import {
   DayPilot,
   DayPilotCalendarComponent,
@@ -10,7 +10,7 @@ import {
 } from '@daypilot/daypilot-lite-angular';
 import { forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ReservationCreateDto } from 'src/app/models/dto/ReservationCreateDto';
+// import { ReservationCreateDto } from 'src/app/models/dto/ReservationCreateDto';
 import { FormsModule } from '@angular/forms';
 import { ScheduleService } from 'src/app/services/schedule/schedule.service';
 import { LectureCreateDto } from 'src/app/models/dto/LectureCreateDto';
@@ -111,7 +111,7 @@ export class ScheduleComponent implements AfterViewInit {
     private readonly courseService: CourseService,
     private readonly subjectService: SubjectService,
     private readonly resourceService: ResourceService
-  ) {}
+  ) { }
 
   ngAfterViewInit(): void {
     this.loadLecturesAndEvents();
@@ -405,11 +405,11 @@ export class ScheduleComponent implements AfterViewInit {
         recurrencePattern:
           formResult.recurrenceType === 'recurring'
             ? {
-                frequency: formResult.frequency,
-                recurrenceInterval: formResult.interval,
-                endDate: formatDateTime(formResult.recurrenceEnd),
-                daysOfWeek: formResult.frequency === 'Weekly' ? formResult.daysOfWeek.map((d) => d.days) : undefined
-              }
+              frequency: formResult.frequency,
+              recurrenceInterval: formResult.interval,
+              endDate: formatDateTime(formResult.recurrenceEnd),
+              daysOfWeek: formResult.frequency === 'Weekly' ? formResult.daysOfWeek.map((d) => d.days) : undefined
+            }
             : undefined,
         courseId: formResult.course,
         subjectId: formResult.subject

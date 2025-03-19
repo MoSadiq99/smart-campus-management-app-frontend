@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
-import { NotificationDto } from './notification.service';
+import { NotificationDto } from '../../../services/notification/notification.service';
 
 @Component({
   selector: 'app-notifications',
@@ -22,4 +22,3 @@ import { NotificationDto } from './notification.service';
 export class NotificationsComponent {
   @Input() notifications: NotificationDto[] = [];
 }
- 

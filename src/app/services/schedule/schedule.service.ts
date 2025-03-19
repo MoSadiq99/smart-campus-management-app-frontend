@@ -3,7 +3,7 @@
 // resource.service.ts
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { DayPilot } from '@daypilot/daypilot-lite-angular';
 import { environment } from 'src/environments/environment';
 import { ReservationDto } from 'src/app/models/dto/ReservationDto';
@@ -32,11 +32,13 @@ export class ScheduleService {
   }
 
   updateReservation(id: string, reservation: any): Observable<void> {
-    return this.http.put<void>(`${environment.apiUrl}/resources/reservations/${id}`, reservation);
+    return this.http.put<void>(`${environment.apiUrl}/lectures/${id}`, reservation);
   }
 
   deleteLecture(id: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiUrl}/resources/reservations/${id}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.delete<void>(`${environment.apiUrl}/lectures/${id}`, { headers });
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
