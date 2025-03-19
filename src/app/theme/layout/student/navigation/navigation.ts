@@ -57,7 +57,7 @@ export const NavigationItems: NavigationItem[] = [
         id: 'create-events',
         title: 'Create Events',
         type: 'item',
-        url: '/admin/event-calendar',
+        url: '/student/event-calendar',
         classes: 'nav-item',
         icon: 'feather icon-plus-square'
       },

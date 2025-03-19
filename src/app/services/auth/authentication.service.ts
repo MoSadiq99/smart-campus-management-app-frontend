@@ -16,8 +16,6 @@ interface JwtPayload {
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-
-
   private currentUserRole: string;
   static readonly RegisterPath = 'http://localhost:8080/api/register';
   static readonly LoginPath = 'http://localhost:8080/api/authenticate';
@@ -27,9 +25,7 @@ export class AuthenticationService {
     private readonly http: HttpClient,
     private readonly tokenService: TokenService,
 
-  ) {
-
-  }
+  ) {}
 
   register(user: UserRegisterDto): Observable<unknown> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -66,7 +62,6 @@ export class AuthenticationService {
 
   private handleLoginResponse(response: LoginResponse): void {
     console.log('Login response:', response); // Debugging line
-
     this.setCurrentUserRole(response.user.roleName);
   }
 
@@ -115,5 +110,9 @@ export class AuthenticationService {
 
   isLecturer(): boolean {
     return this.getRole() === 'ROLE_LECTURER';
+  }
+
+  isStudent(): boolean {
+    return this.getRole() === 'ROLE_STUDENT';
   }
 }

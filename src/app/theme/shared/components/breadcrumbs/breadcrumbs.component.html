@@ -19,7 +19,7 @@
                   <a [routerLink]="['/dashboard/default/']"><i class="feather icon-home"></i></a>
                 }
                 @if (type === 'theme1') {
-                  <a [routerLink]="['/dashboard/default/']">{{ 'Home' }}</a>
+                  <a [routerLink]="homeUrl">{{ 'Home' }}</a>
                 }
               </li>
               @for (breadcrumb of navigationList; track breadcrumb) {

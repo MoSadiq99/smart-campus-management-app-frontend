@@ -5,7 +5,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FileDto } from '../group.service';
+import { FileDto } from '../../../../services/group/group.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({

@@ -11,6 +11,7 @@ export interface EventDto {
   capacity: number;
   status: EventStatus;
   attendeeIds: number[];
+  category?: string; // Added this field
 }
 
 export interface EventCreateDto {

@@ -5,15 +5,6 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { UserDto } from 'src/app/models/dto/UserDto';
 
-// export interface UserDto {
-//   id: number;
-//   name: string;
-//   email: string;
-//   role: {
-//     roleName: string;
-//   };
-// }
-
 @Injectable({
   providedIn: 'root'
 })

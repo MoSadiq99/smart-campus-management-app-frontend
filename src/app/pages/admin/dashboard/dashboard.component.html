@@ -1,12 +1,125 @@
-<div class="tabs-container">
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link routerLink="course" routerLinkActive="active">Course</a>
-      <a mat-tab-link routerLink="subject" routerLinkActive="active">Subject</a>
-      <a mat-tab-link routerLink="user" routerLinkActive="active">User</a>
-    </nav>
-  
-    <div class="tab-content">
-      <router-outlet></router-outlet>
+<div class="container py-4">
+  <!-- Header -->
+  <div class="pb-3 border-bottom">
+    <p class="mt-1 text-muted small">
+      Welcome back, {{currentUser?.name}}! Here's what's happening today.
+    </p>
+  </div>
+
+  <!-- Stats -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4 mt-4">
+    <div *ngFor="let stat of stats" class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <span [ngClass]="stat.color" class="d-inline-block rounded-circle" style="width: 20px; height: 20px;"></span>
+            </div>
+            <div class="ms-3 flex-grow-1">
+              <div class="small text-muted">{{stat.title}}</div>
+              <div class="h5 mb-0 text-dark">{{stat.value}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  
+
+  <!-- Events and Announcements -->
+  <div class="row row-cols-1 row-cols-lg-2 g-4 mt-4">
+    <!-- Upcoming Events -->
+    <div class="col">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="h5 mb-0">Upcoming Events</h3>
+          <span class="text-muted d-inline-block rounded-circle" style="width: 20px; height: 20px;"></span>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <div *ngFor="let event of upcomingEvents" class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="small text-muted">{{event.date}}</div>
+                <span [ngClass]="{
+                  'bg-primary text-white': event.type === 'academic',
+                  'bg-success text-white': event.type === 'event',
+                  'bg-warning text-dark': event.type === 'deadline'
+                }" class="badge rounded-pill">
+                  {{event.type}}
+                </span>
+              </div>
+              <div class="mt-1 small fw-medium">{{event.title}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-end bg-light">
+          <button class="btn btn-link btn-sm text-primary text-decoration-none">
+            View all events
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="col">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="h5 mb-0">Announcements</h3>
+          <span class="text-muted d-inline-block rounded-circle" style="width: 20px; height: 20px;"></span>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <div *ngFor="let announcement of announcements" class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="small text-muted">{{announcement.date}}</div>
+                <span [ngClass]="{
+                  'bg-danger text-white': announcement.priority === 'high',
+                  'bg-warning text-dark': announcement.priority === 'medium',
+                  'bg-success text-white': announcement.priority === 'low'
+                }" class="badge rounded-pill">
+                  {{announcement.priority}} priority
+                </span>
+              </div>
+              <div class="mt-1 small fw-medium">{{announcement.title}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-end bg-light">
+          <button class="btn btn-link btn-sm text-primary text-decoration-none">
+            View all announcements
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="mt-4">
+    <h3 class="h5 fw-medium">Quick Actions</h3>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mt-2">
+      <div class="col">
+        <button class="btn btn-light w-100 shadow-sm py-3 d-flex align-items-center justify-content-center">
+          <span class="text-primary me-2 d-inline-block rounded-circle" style="width: 20px; height: 20px;"></span>
+          <span class="small fw-medium">Schedule Class</span>
+        </button>
+      </div>
+      <div class="col">
+        <button class="btn btn-light w-100 shadow-sm py-3 d-flex align-items-center justify-content-center">
+          <span class="text-purple me-2 d-inline-block rounded-circle" style="width: 20px; height: 20px;"></span>
+          <span class="small fw-medium">Reserve Resource</span>
+        </button>
+      </div>
+      <div class="col">
+        <button class="btn btn-light w-100 shadow-sm py-3 d-flex align-items-center justify-content-center">
+          <span class="text-success me-2 d-inline-block rounded-circle" style="width: 20px; height: 20px;"></span>
+          <span class="small fw-medium">Create Event</span>
+        </button>
+      </div>
+      <div class="col">
+        <button class="btn btn-light w-100 shadow-sm py-3 d-flex align-items-center justify-content-center">
+          <span class="text-warning me-2 d-inline-block rounded-circle" style="width: 20px; height: 20px;"></span>
+          <span class="small fw-medium">Group Chat</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

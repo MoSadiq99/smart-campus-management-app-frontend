@@ -1,133 +1,75 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
+import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
+import { CourseComponent } from './pages/admin/dashboard/course/course.component';
+import { SubjectDetailComponent } from './pages/admin/dashboard/subject/subject-detail/subject-detail.component';
+import { SubjectComponent } from './pages/admin/dashboard/subject/subject.component';
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
-import { StudentComponent } from './theme/layout/student/student.component';
 import { LecturerComponent } from './theme/layout/lecturer/lecturer.component';
-import { CourseComponent } from './pages/admin/dashboard/course/course.component';
-import { SubjectComponent } from './pages/admin/dashboard/subject/subject.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { CourseDetailComponent } from './pages/admin/dashboard/course/course-detail/course-detail.component';
-import { SubjectDetailComponent } from './pages/admin/dashboard/subject/subject-detail/subject-detail.component';
-
+import { StudentComponent } from './theme/layout/student/student.component';
 import { EnrollmentComponent } from './pages/admin/dashboard/enrollment/enrollment.component';
-// import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
-
-import { authGuard } from './services/guard/auth.guard';
-import { GroupViewComponent } from './components/common/chat/group-view/group-view.component';
+import { ResourceComponent } from './components/admin/resource/resource.component';
 import { GroupChatComponent } from './components/common/chat/group-chat/group-chat.component';
+import { GroupViewComponent } from './components/common/chat/group-view/group-view.component';
+import { EventCalendarComponent } from './components/common/event-calendar/event-calendar.component';
+import { ResourceCalendarComponent } from './components/common/resource-calendar/resource-calendar.component';
 import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
+import { authGuard } from './services/guard/auth.guard';
+import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
+import { EventsListComponent } from './components/common/events-list/events-list.component';
 
 const routes: Routes = [
+
   {
     path: '',
     component: GuestComponent,
     children: [
-      {
-        path: '',
-        redirectTo: 'auth'
-      },
-      {
-        path: 'auth',
-        loadChildren: () => import('./pages/authentication/authentication.module').then((m) => m.AuthenticationModule)
-      }
+      { path: '', redirectTo: 'auth' },
+      { path: 'auth', loadChildren: () => import('./pages/authentication/authentication.module').then((m) => m.AuthenticationModule) }
     ]
   },
   {
     path: 'admin',
     component: AdminComponent,
     children: [
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./components/admin/dashboard/admin-dash/admin-dash.component').then((m) => m.AdminDashComponent),
-        canActivate: [authGuard] //! This is the guard- It will check if JWT token is valid or not (if not, it will redirect to login page)
+      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] //! This is the guard- It will check if JWT token is valid or not (if not, it will redirect to login page)
       },
-
-      {
-        path: 'resource',
-        loadComponent: () => import('./components/admin/resource/resource.component').then((c) => c.ResourceComponent)
-      },
-
-      {
-        path: 'event-calendar',
-        loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
-      },
-      {
-        path: 'resource-calendar',
-
-        loadComponent: () =>
-          import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
-      },
-      { path: 'chat', component: GroupViewComponent },
-      { path: 'group-chat/:id', component: GroupChatComponent },
-
-      {
-        path: 'create-group',
-        loadComponent: () => import('./components/admin/create-group/create-group.component').then((m) => m.CreateGroupComponent)
-      },
-      {
-        path: 'schedule-calendar', component: ScheduleComponent
-      },
-      { path: 'course', component: CourseComponent },
-      { path: 'course/:courseCode', component: CourseDetailComponent },
-      { path: 'subject', component: SubjectComponent },
-      { path: 'subject/:subjectId', component: SubjectDetailComponent },
-      // { path: 'user', component: SubjectComponent },
-      { path: 'enrollment', component: EnrollmentComponent }
+      { path: 'resource', component: ResourceComponent, canActivate: [authGuard] },
+      { path: 'event-calendar', component: EventCalendarComponent, canActivate: [authGuard] },
+      { path: 'events', component: EventsListComponent},
+      { path: 'resource-calendar', component: ResourceCalendarComponent, canActivate: [authGuard] },
+      { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
+      { path: 'group-chat/:id', component: GroupChatComponent, canActivate: [authGuard] },
+      { path: 'create-group', component: GroupViewComponent, canActivate: [authGuard] },
+      { path: 'schedule-calendar', component: ScheduleComponent, canActivate: [authGuard] },
+      { path: 'course', component: CourseComponent, canActivate: [authGuard] },
+      { path: 'course/:courseCode', component: CourseDetailComponent, canActivate: [authGuard] },
+      { path: 'subject', component: SubjectComponent, canActivate: [authGuard] },
+      { path: 'subject/:subjectId', component: SubjectDetailComponent, canActivate: [authGuard] },
+      { path: 'enrollment', component: EnrollmentComponent, canActivate: [authGuard] }
     ]
   },
   {
     path: 'student',
     component: StudentComponent,
-
     children: [
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      },
-
-      {
-        path: 'dashboard'
-        // loadComponent: () => import('./components/farmer/farmer-dashboard/farmer-dashboard.component').then((m) => m.FarmerDashboardComponent),
-      },
-
-      {
-        path: 'event-calendar',
-        loadComponent: () => import('./components/common/event-calendar/event-calendar.component').then((m) => m.EventCalendarComponent)
-      },
-
-      {
-        path: 'resource-calendar',
-
-        loadComponent: () =>
-          import('./components/common/resource-calendar/resource-calendar.component').then((m) => m.ResourceCalendarComponent)
-      },
-
-      // {
-      //   path: 'schedule-calendar',
-      //   loadComponent: () =>
-      //     import('./components/common/schedule-calendar/schedule-calendar.component').then((m) => m.ScheduleCalendarComponent)
-      // },
-      {
-        path: 'schedule',
-        loadComponent: () => import('./pages/admin/schedule/schedule.component').then((m) => m.ScheduleComponent)
-      }
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
+      { path: 'event-calendar', component: EventCalendarComponent, canActivate: [authGuard] },
+      { path: 'resource-calendar', component: ResourceCalendarComponent, canActivate: [authGuard] },
+      { path: 'schedule', component: ScheduleComponent, canActivate: [authGuard] },
+      { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
     ]
   },
   {
     path: 'lecturer',
     component: LecturerComponent,
     children: [
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
-      },
-      {
-        path: 'dashboard'
-        // loadComponent: () => import('./components/buyer/buyer-dashboard/buyer-dashboard.component').then((m) => m.BuyerDashboardComponent),
-      }
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', },
+      { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
     ]
   }
 ];

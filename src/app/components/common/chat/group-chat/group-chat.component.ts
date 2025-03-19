@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { GroupService, MessageDto, MessageCreateDto, TaskCreateDto, FileDto, TaskDto, MemberDto } from '../group.service';
-import { NotificationService, NotificationDto } from '../notification.service';
+import { GroupService, MessageDto, MessageCreateDto, TaskCreateDto, FileDto, TaskDto, MemberDto } from '../../../../services/group/group.service';
+import { NotificationService, NotificationDto } from '../../../../services/notification/notification.service';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -12,7 +12,7 @@ import { ChatComponent } from '../chat/chat.component';
 import { FilesComponent } from '../file/files.component';
 import { TasksComponent } from '../task/tasks.component';
 import { MembersComponent } from '../member/members.component';
-import { NotificationsComponent } from '../notifications.component';
+import { NotificationsComponent } from '../../nofications/notifications.component';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { MatSpinner } from '@angular/material/progress-spinner';
 import { UserDto } from 'src/app/models/dto/UserDto';

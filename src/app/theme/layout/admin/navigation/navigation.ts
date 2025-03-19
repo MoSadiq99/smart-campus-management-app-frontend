@@ -94,8 +94,8 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'feather icon-plus-square'
       },
       {
-        id: 'manage-events',
-        title: 'Manage Events',
+        id: 'events-list',
+        title: 'Campus Events',
         type: 'item',
         url: '/admin/events',
         classes: 'nav-item',

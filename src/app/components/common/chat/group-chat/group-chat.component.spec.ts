@@ -6,8 +6,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { GroupService } from '../group.service';
-import { NotificationService } from '../notification.service';
+import { GroupService } from '../../../../services/group/group.service';
+import { NotificationService } from '../../../../services/notification/notification.service';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { of } from 'rxjs';
 
