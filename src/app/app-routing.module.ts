@@ -19,9 +19,9 @@ import { ScheduleComponent } from './pages/admin/schedule/schedule.component';
 import { authGuard } from './services/guard/auth.guard';
 import { DashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { EventsListComponent } from './components/common/events-list/events-list.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 const routes: Routes = [
-
   {
     path: '',
     component: GuestComponent,
@@ -34,11 +34,15 @@ const routes: Routes = [
     path: 'admin',
     component: AdminComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] //! This is the guard- It will check if JWT token is valid or not (if not, it will redirect to login page)
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        canActivate: [authGuard] //! This is the guard- It will check if JWT token is valid or not (if not, it will redirect to login page)
       },
       { path: 'resource', component: ResourceComponent, canActivate: [authGuard] },
       { path: 'event-calendar', component: EventCalendarComponent, canActivate: [authGuard] },
-      { path: 'events', component: EventsListComponent},
+      { path: 'events', component: EventsListComponent },
       { path: 'resource-calendar', component: ResourceCalendarComponent, canActivate: [authGuard] },
       { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
       { path: 'group-chat/:id', component: GroupChatComponent, canActivate: [authGuard] },
@@ -48,7 +52,8 @@ const routes: Routes = [
       { path: 'course/:courseCode', component: CourseDetailComponent, canActivate: [authGuard] },
       { path: 'subject', component: SubjectComponent, canActivate: [authGuard] },
       { path: 'subject/:subjectId', component: SubjectDetailComponent, canActivate: [authGuard] },
-      { path: 'enrollment', component: EnrollmentComponent, canActivate: [authGuard] }
+      { path: 'enrollment', component: EnrollmentComponent, canActivate: [authGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
     ]
   },
   {
@@ -56,11 +61,12 @@ const routes: Routes = [
     component: StudentComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
+      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
       { path: 'event-calendar', component: EventCalendarComponent, canActivate: [authGuard] },
       { path: 'resource-calendar', component: ResourceCalendarComponent, canActivate: [authGuard] },
       { path: 'schedule', component: ScheduleComponent, canActivate: [authGuard] },
       { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
     ]
   },
   {
@@ -68,8 +74,9 @@ const routes: Routes = [
     component: LecturerComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', },
+      { path: 'dashboard' },
       { path: 'chat', component: GroupViewComponent, canActivate: [authGuard] },
+      { path: 'profile', component: ProfileComponent, canActivate: [authGuard] }
     ]
   }
 ];
